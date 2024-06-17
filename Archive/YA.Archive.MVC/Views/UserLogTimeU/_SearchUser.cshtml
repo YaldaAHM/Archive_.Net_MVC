@@ -1,0 +1,146 @@
+﻿<style>
+    label {
+        color: lightslategray;
+    }
+
+    input {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    .dropdown.dropdown-lg .dropdown-menu {
+        margin-top: -1px;
+        padding: 6px 20px;
+    }
+
+    .input-group-btn .btn-group {
+        display: flex !important;
+    }
+
+    .btn-group .btn {
+        border-radius: 0;
+        margin-left: -1px;
+    }
+
+    .btn-group .btn:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    .btn-group .form-horizontal .btn[type="submit"] {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .form-horizontal .form-group {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .form-group .form-control:last-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+</style>
+<br/>
+<h4 class="page-line"></h4>
+<div class="row" style="float: left; direction: ltr; position: inherit; padding-left: 50px; width: 900px;">
+
+
+    <div id="menuSearch" role="menu">
+        <form class="form-horizontal" role="form" style="padding-right: 20px; padding-left: 20px; border-top-left-radius: 7px;
+                                       border-bottom-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px;">
+            <div style="left: 10px;">
+               <div class="row show-grid-forms">
+
+
+    @Html.Label("From", new { @class = "col-sm-2", style = "color:lightslategray" })
+    <div class="col-sm-3" style="margin-left: -170px; margin-top: 30px">
+        @(Html.Kendo().DatePicker()
+              .Name("SStartDate")
+         
+              .Value("")
+              .Format("yyyy/MM/dd")
+              .HtmlAttributes(new { style = "width:100%;" })
+       
+        )
+    </div>
+    @Html.Label("To", new { @class = "col-sm-2", style = "margin-left:50px" })
+    <div class="col-sm-3" style="margin-left: -170px; margin-top: 30px">
+
+        @(Html.Kendo().DatePicker()
+              .Name("SEndDate")
+              .HtmlAttributes(new { style = "width:100%;" })
+         
+              .Value("")
+              .Format("yyyy/MM/dd")
+           
+        )
+    </div>
+
+                </div>
+                <div class="row show-grid-forms">
+                    @Html.Label("User Name", new {@class = "col-sm-2"})
+
+                    <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+                        @Html.TextBox("SUserName", null,
+                            new
+                            {
+                                @class = "form-control,k-textbox,k-input",
+                                style = "width:200px"
+                            })
+                    </div>
+
+@if (Request.IsAuthenticated && User.IsInRole("MainCenter"))
+{
+    @Html.Label("Client Center Name", new { @class = "col-sm-2" })
+    <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+
+        @(Html.Kendo().ComboBox()
+                                  .Name("SClientCenterId")
+                                  .DataTextField("Name")
+                                  .DataValueField("Id")
+                                  .HtmlAttributes(new { style = "width:100%;" })
+                                  .Suggest(true)
+                                  .Filter("contains")
+                                  .Placeholder("Select Client Center")
+
+                                  .DataSource(source => source
+                                      .Custom()
+                                      .Transport(transport => transport
+                                          .Read(read => read.Action("DropClientCenter", "Project").DataType("json"))
+                                      )
+                                  )
+        )
+
+    </div>
+}
+
+                    @Html.Label("User Group ", new {@class = "col-sm-2", style = "margin-left:50px"})
+                    <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+                        @(Html.Kendo().MultiSelect()
+                              .Name("SGroups")
+                              .DataValueField("Id")
+                              .DataTextField("Name")
+                              .Placeholder(" Select User Group   ")
+
+                              .BindTo((System.Collections.IEnumerable) ViewData["Group"])
+
+                              )
+                    </div>
+                </div>
+
+               
+
+            </div>
+            <h4 class="page-line"></h4>
+            <button type="submit" id="btnSearch" class="btn btn-primary" style="float: right; right: 100px; width: 100px">
+                <span class="glyphicon glyphicon-search" aria-hidden="true">  Search   </span>
+            </button>
+        </form>
+    </div>
+</div>
+
+

@@ -1,0 +1,56 @@
+﻿@using YA.Archive.MVC2.Models
+@model YA.Archive.MVC2.Models.ClientCenter.ClientCenterA
+@using YA.Archive.Infrastructure.Infrastructure.Permission
+<style>
+    
+</style>
+<div style="padding-left: 20px">
+
+
+
+    <div class="row show-grid-forms">
+        @Html.LabelFor(m => m.Name, new { @class = "col-sm-2" })
+        <div class="col-sm-5" style="margin-left: 50px;">
+            @Html.TextBoxFor(m => m.Name, new { @class = "k-textbox", style = "width: 90%" })
+
+
+        </div>
+    </div>
+  
+    <div class="row show-grid-forms">
+        @Html.LabelFor(m => m.UserName, new {@class = "col-sm-2"})
+        <div class="col-sm-5">
+            @Html.TextBoxFor(m => m.UserName, new {@class = "k-textbox", style = "width: 90%"})
+
+
+        </div>
+    </div>
+
+
+    <div class="row show-grid-forms">
+        @Html.LabelFor(m => m.Password, new {@class = "col-sm-2"})
+        <div class="col-sm-5">
+            @Html.PasswordFor(m => m.Password, new {@class = "k-textbox", style = "width: 90%"})
+            @*@Html.ValidationMessageFor(model => model.Password)*@
+        </div>
+    </div>
+
+
+
+
+
+</div>
+    
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+        });
+
+    </script>
+
+

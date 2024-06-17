@@ -1,0 +1,286 @@
+﻿@*@{
+    Layout = null;
+}*@
+@Html.Partial("_SiteMap", ViewData["PermissionSiteMap"])
+
+
+                @(Html.Kendo().Grid<YA.Archive.Service.UserManagementMdl.PermissionClaimsMdl.VMs.PermissionClaimsVM>()
+        .Name("client")
+        .Columns(columns =>
+        {
+        columns.Bound(p => p.Description).Title("Access").Width(300); ;
+        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= Create ? checked='checked':'' # class='chkbx' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox' onclick='checkAll(this)'/>  Create ").Width(100);
+                columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= Edit ? checked='checked':'' # class='chkbx1' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox1' onclick='checkAll1(this)'/> Edit").Width(100);
+                columns.Template(@<text></text>).ClientTemplate("<input type='checkbox' #= Delete ? checked='checked':'' # class='chkbx2' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox2' onclick='checkAll2(this)'/>  Delete").Width(100);
+                columns.Template(@<text></text>                                ).ClientTemplate("<input type='checkbox' #= View ? checked='checked':'' # class='chkbx3' />")
+                    .HeaderTemplate("<input type='checkbox' id='masterCheckBox3' onclick='checkAll3(this)'/> مشاهده").Width(100);
+
+
+
+
+        })
+
+        .ToolBar(toolbar =>
+        {
+            
+            toolbar.Save().SaveText("Save").CancelText("Cancel");
+            
+        })
+
+    .Pageable(pager => pager
+            .Messages(messages => messages.Display("{0} to {1} . Total {2}")).Messages(messages => messages.Empty("No information has been registered")))
+    .Sortable()
+          
+                .Selectable()
+.HtmlAttributes(new { style = "height: 650px;" })
+            .Editable(editable => editable.Mode(GridEditMode.InCell))
+            //.Filterable()
+            .Pageable()
+            //.Navigatable()
+            .Sortable()
+           
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .PageSize(20)
+                .ServerOperation(false)
+                 .Events(events =>
+          {
+              events.Error("error_handler");
+              events.RequestEnd("onRequestEnd");
+
+          })
+                .Model (model =>
+                {
+                    model.Id(p => p.ClaimId);
+                    model.Field(p => p.ClaimId).Editable(false);
+                    model.Field(p => p.Create);
+                    model.Field(p => p.CreateClaimId);
+                    model.Field(p => p.Delete);
+                    model.Field(p => p.DeleteClaimId);
+                    model.Field(p => p.Description);
+                    model.Field(p => p.Edit);
+                    model.Field(p => p.EditClaimId);
+                    model.Field(p => p.User);
+                    model.Field(p => p.View);
+                    model.Field(p => p.ViewClaimId);
+                })
+                
+                .Read("Read", "Permission", new { userId = ViewData["UserId"] })
+                .Update("Edit", "Permission", new { userId = ViewData["UserId"] })
+          
+            )
+                )
+                <script type="text/javascript">
+                    $(function () {
+                        $(".k-grid-cancel-changes").remove();
+                    });
+                    function onEdit(e) {
+                        $('[name="Id"]').attr("Hidden", true);
+                    }
+
+                </script>
+                <script type="text/javascript">
+                    function onRequestEnd(e) {
+                        if ($("#ProjName").val() != "") {
+
+                            $("#ClientCenterId").val($("#ProjClientId").val());
+                            $("#FolderId").val($("#ProjId").val());
+                            
+
+                        } else {
+                            $("#divClientProj").prop('hidden', false);
+                        }
+
+                        if (e.type == "create" && !e.response.Errors) {
+                            if (e.response == null || e.response.Errors == null) {
+                                setTimeout(function myfunction() {
+                                    Lobibox.alert('success', {
+                                        msg: "Ok. done successfully",
+                                        title: "successful",
+                                        buttons: {
+                                            ok: {
+                                                text: "Ok",
+                                                'class': 'btn btn-success bthwidth',
+                                            }
+                                        }
+                                    });
+                                  
+                                }, 1000);
+                            }
+                        }
+
+                        else if (e.type == "destroy" && !e.response.Errors) {
+                            if (e.response == null || e.response.Errors == null) {
+                                setTimeout(function myfunction() {
+                                    Lobibox.alert('success', {
+                                        msg: "Delete was done successfully.",
+                                        title: "successful",
+                                        buttons: {
+                                            ok: {
+                                                text: "Ok",
+                                                'class': 'btn btn-success bthwidth',
+                                            }
+                                        }
+                                    });
+                                  
+                                }, 1000);
+                            } $("#SProjName").val("");
+                            $("#SProjCode").val("");
+                        }
+                        else if (e.type == "update" && !e.response.Errors) {
+                            if (e.response == null || e.response.Errors == null) {
+
+                                setTimeout(function myfunction() {
+                                    Lobibox.alert('success', {
+                                        msg: "Edit was done successfully.",
+                                        title: "successful",
+                                        buttons: {
+                                            ok: {
+                                                text: "Ok",
+                                                'class': 'btn btn-success bthwidth',
+                                            }
+                                        }
+                                    });
+                                 
+                                }, 1000);
+                            }
+                        }
+                        else if (e.type == "cancel" && !e.response.Errors) {
+                            if (e.response == null || e.response.Errors == null) {
+
+                                setTimeout(function myfunction() {
+                                    $("#Files").data("kendoGrid").dataSource.read();
+                                    $("#SProjName").val("");
+                                    $("#SProjCode").val("");
+
+                                }, 1000);
+                            }
+                        }
+                    
+
+                    }
+
+                    var Err = "";
+                    var t = false;
+                    function error_handler(e) {
+                        if (e.errors) {
+                            var message = "Error :\n";
+                            $.each(e.errors, function (key, value) {
+                                if ('errors' in value) {
+                                    $.each(value.errors, function () {
+                                        message += this + "\n";
+                                    });
+                                }
+                            });
+                            //alert(message);
+                            e.sender.read();
+                            e.sender._destroyed = [];
+                            Lobibox.alert('error', {
+                                msg: message,
+                                title: "Error!",
+                                buttons: {
+                                    ok: {
+                                        text: "Close",
+                                        'class': 'btn btn-danger bthwidth',
+                                    }
+                                }
+                            });
+                            $("#grid").data("kendoGrid").dataSource.read();
+                        }
+                    }
+                </script>
+                <script type="text/javascript">
+                    $(function() {
+                        $('#client').on('click', '.chkbx', function() {
+                            var checked = $(this).is(':checked');
+                            var grid = $('#client').data().kendoGrid;
+                            var dataItem = grid.dataItem($(this).closest('tr'));
+                            dataItem.set('Create', checked);
+                        });
+                    });
+
+    function checkAll(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#client').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['Create'] != state)
+                this.dirty=true;
+            this['Create'] = state;
+        });
+        grid.refresh();
+    }
+
+                </script>
+                <script type="text/javascript">
+                    $(function() {
+                        $('#client').on('click', '.chkbx1', function() {
+                            var checked = $(this).is(':checked');
+                            var grid = $('#client').data().kendoGrid;
+                            var dataItem = grid.dataItem($(this).closest('tr'));
+                            dataItem.set('Edit', checked);
+                        });
+                    });
+
+    function checkAll1(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#client').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['Edit'] != state)
+                this.dirty=true;
+            this['Edit'] = state;
+        });
+        grid.refresh();
+    }
+
+                </script>
+                <script type="text/javascript">
+                    $(function() {
+                        $('#client').on('click', '.chkbx2', function() {
+                            var checked = $(this).is(':checked');
+                            var grid = $('#client').data().kendoGrid;
+                            var dataItem = grid.dataItem($(this).closest('tr'));
+                            dataItem.set('Delete', checked);
+                        });
+                    });
+
+    function checkAll2(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#client').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['Delete'] != state)
+                this.dirty=true;
+            this['Delete'] = state;
+        });
+        grid.refresh();
+    }
+
+                </script>
+                <script type="text/javascript">
+                    $(function() {
+                        $('#client').on('click', '.chkbx3', function() {
+                            var checked = $(this).is(':checked');
+                            var grid = $('#client').data().kendoGrid;
+                            var dataItem = grid.dataItem($(this).closest('tr'));
+                            dataItem.set('View', checked);
+                        });
+                    });
+
+    function checkAll3(ele) {
+        var state = $(ele).is(':checked');
+        var grid = $('#client').data().kendoGrid;
+        $.each(grid.dataSource.view(), function () {
+            if (this['View'] != state)
+                this.dirty=true;
+            this['View'] = state;
+        });
+        grid.refresh();
+    }
+
+                </script>
+        
+
+

@@ -1,0 +1,93 @@
+﻿@model YA.Archive.MVC2.Models.Folder.CommentViewModel
+
+<style>
+    .sp {
+        top: -60px;
+    }
+</style>
+<br />
+@Html.HiddenFor(model => model.Id)
+<div style="padding-left: 50px;  margin-right: 20px;">
+    <div id="divClientProj" class="row show-grid-forms">
+        @Html.LabelFor(m => m.Folder.ClientCenterId, new {@class = "col-sm-2"})
+
+        <div class="col-sm-3" style="margin-left: -100px; margin-top: 30px">
+            @(Html.Kendo().ComboBox()
+                  .Name("ClientCenterId")
+                  .HtmlAttributes(new {style = "width:100%;"})
+                  .Placeholder("Select")
+                  .DataTextField("Name")
+                  .DataValueField("Id")
+                  .Filter(FilterType.Contains)
+                  .DataSource(source =>
+                              {
+                                  source.Read(read =>
+                                              {
+                                                  read.Action("GetClientCenters", "File");
+                                              });
+                              })
+                  )
+
+
+        </div>
+
+        <script>
+            function filterProjects() {
+                return {
+                    clientCenterId: $("#ClientCenterId").val()
+                };
+            }
+        </script>
+        @Html.LabelFor(m => m.FolderId, new {@class = "col-sm-2", style = "margin-left:50px"})
+        <div class="col-sm-3" style="margin-left: -100px; margin-top: 30px">
+            @(Html.Kendo().ComboBox()
+                  .Name("FolderId")
+                  .HtmlAttributes(new {style = "width:100%;"})
+                  .Placeholder("Select")
+                  .DataTextField("Name")
+                  .DataValueField("Id")
+                  .Filter(FilterType.Contains)
+                  .DataSource(source =>
+                              {
+                                  source.Read(read =>
+                                              {
+                                                  read.Action("GetProjectss", "File")
+                                                      .Data("filterProjects")
+                                                      ;
+                                              })
+                                      .ServerFiltering(true);
+                              })
+                  .Enable(false)
+                  .AutoBind(false)
+                  .CascadeFrom("ClientCenterId")
+
+                  )
+
+
+
+        </div>
+
+    </div>
+   
+   
+    <div class="row sp" @*class="form-group"*@>
+        @Html.LabelFor(m => m.Description, new { @class = "col-sm-2" })
+        <div class="col-sm-4" style="margin-left: -100px; margin-top: 30px">
+            @Html.TextAreaFor(m => m.Description,
+
+                new
+                {
+                    @class = "form-control",style="width:300px;height: 150px",
+                    title = @Html.DisplayNameFor(m => m.Description),
+                    placeholder = @Html.DisplayNameFor(m => m.Description),
+
+                })
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+
+    </div>
+    @*<div class="clearfix"></div>*@
+   
+    <div class="clearfix"></div>
+    </div>
+

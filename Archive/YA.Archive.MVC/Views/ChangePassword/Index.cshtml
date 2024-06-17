@@ -1,0 +1,51 @@
+﻿@model YA.Archive.Service.UserManagementMdl.VMs.EditVM
+@{ ViewBag.Title = "Edit"; }
+
+
+@Html.Partial("_SiteMap", ViewData["ChangePasswordSiteMap"])
+@Html.ValidationSummary(false)
+<div class="container-fluid">
+    <div id="page-login" class="row">
+        <div class="col-xs-12 col-md-5 col-md-offset-4 col-sm-7 col-sm-offset-3" style="direction: ltr; top: 10px;">
+           
+
+            <div class="box">
+                <div class="box-content">
+                    <div class="text-center">
+                        <h3 class="page-header">Change Password</h3>
+                    </div>
+
+
+                    @*@Html.ValidationSummary()*@
+                    @using (Html.BeginForm())
+                    { <div class="text-left">
+                            <span style="color:brown">@ViewBag.MessageChangePass</span>
+                        </div>
+                        @Html.AntiForgeryToken();
+                  
+
+                            <div class="form-group">
+                                <label class="control-label">Previous password</label>
+                                @Html.Password("oldpassword",null, new { @class = "form-control", style = "text-align:center" })
+                            </div>
+                        <div class="form-group">
+                            <label class="control-label">New password</label>
+                            @Html.Password("password", null, new {@class = "form-control", style = "text-align:center"})
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Repeat the new password</label>
+                            @Html.Password("repeatpassword", null, new { @class = "form-control", style = "text-align:center" })
+                        </div>
+                            <div class="text-center">
+                                <button class="btn btn-primary" type="submit">&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                               
+                            </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

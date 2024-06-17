@@ -1,0 +1,521 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AC6F8CDC-F4EE-45B2-A46A-CEB8E87100C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>YA.Archive.Service</RootNamespace>
+    <AssemblyName>YA.Archive.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\YA.Archive.MVC2\Bin\Kendo.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoMapperConfiguration.cs" />
+    <Compile Include="ClientCenterAMdl\Imps\ClientCenterAService.cs" />
+    <Compile Include="ClientCenterAMdl\Mapping\ClientCenterAMapper.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterADeleteByIdRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterADeleteRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterADeleteResponse.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindAllRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindAllResponse.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindByExpressionExpRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindByExpressionExpResponse.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindByExpressionRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindByExpressionResponse.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindByIdRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAFindByIdResponse.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAInsertRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAInsertResponse.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAUpdateRequest.cs" />
+    <Compile Include="ClientCenterAMdl\Messaging\ClientCenterAUpdateResponse.cs" />
+    <Compile Include="ClientCenterAMdl\Sterategy\ChooseSterategy.cs" />
+    <Compile Include="ClientCenterAMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="ClientCenterAMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="ClientCenterAMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="ClientCenterAMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="ClientCenterAMdl\VMs\ClientCenterAVM.cs" />
+    <Compile Include="ClientCenterMdl\Imps\ClientCenterService.cs" />
+    <Compile Include="ClientCenterMdl\Mapping\ClientCenterMapper.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterDeleteByIdRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterDeleteRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterDeleteResponse.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindAllRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindAllResponse.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindByExpressionRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindByExpressionResponse.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindByIdRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindByIdResponse.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterInsertRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterInsertResponse.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterUpdateRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterUpdateResponse.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindByExpressionExpRequest.cs" />
+    <Compile Include="ClientCenterMdl\Messaging\ClientCenterFindByExpressionExpResponse.cs" />
+    <Compile Include="ClientCenterMdl\Sterategy\ChooseSterategy.cs" />
+    <Compile Include="ClientCenterMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="ClientCenterMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="ClientCenterMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="ClientCenterMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="ClientCenterMdl\VMs\ClientCenterVM.cs" />
+    <Compile Include="ClientCenterStrategy\ChooseClientCenter.cs" />
+    <Compile Include="ClientCenterStrategy\ClientCenterInfo.cs" />
+    <Compile Include="ClientCenterStrategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="DirectoryMdl\Imps\DirectoryService.cs" />
+    <Compile Include="DirectoryMdl\VMs\DirectoryVM.cs" />
+    <Compile Include="FileMdl\FileStorage\HttpFileCollectionBaseAdapter.cs" />
+    <Compile Include="FileMdl\FileStorage\HttpFileTypeAdapter.cs" />
+    <Compile Include="FileMdl\FileStorage\IFileStorage.cs" />
+    <Compile Include="FileMdl\FileStorage\IFileType.cs" />
+    <Compile Include="FileMdl\FileStorage\NullObjectFile.cs" />
+    <Compile Include="FileMdl\Imps\FileService.cs" />
+    <Compile Include="FileMdl\Mapping\FileMapper.cs" />
+    <Compile Include="FileMdl\Messaging\FileDeleteByIdRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileDeleteRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileDeleteResponse.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindAllRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindAllResponse.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindByExpressionExpRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindByExpressionExpResponse.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindByExpressionRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindByExpressionResponse.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindByIdRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileFindByIdResponse.cs" />
+    <Compile Include="FileMdl\Messaging\FileInsertRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileInsertResponse.cs" />
+    <Compile Include="FileMdl\Messaging\FileUpdateRequest.cs" />
+    <Compile Include="FileMdl\Messaging\FileUpdateResponse.cs" />
+    <Compile Include="FileMdl\Sterategy\ChooseSterategy.cs" />
+    <Compile Include="FileMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="FileMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="FileMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="FileMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="FileMdl\VMs\FileExpVM.cs" />
+    <Compile Include="FileMdl\VMs\FileInfoVM.cs" />
+    <Compile Include="FileMdl\VMs\FileTVM.cs" />
+    <Compile Include="FileMdl\VMs\FileVM.cs" />
+    <Compile Include="FileMdl\VMs\ITFile.cs" />
+    <Compile Include="FileMdl\VMs\HttpFileAdapter.cs" />
+    <Compile Include="FileMdl\VMs\TypesOfFileVM.cs" />
+    <Compile Include="FolderMdl\Access\AllowAccess.cs" />
+    <Compile Include="FolderMdl\Access\ApplyAccess.cs" />
+    <Compile Include="FolderMdl\Imps\FolderService.cs" />
+    <Compile Include="FolderMdl\Mapping\FolderMapper.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderDeleteByIdRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderDeleteRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderDeleteResponse.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindAllRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindAllResponse.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindByExpressionExpRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindByExpressionExpResponse.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindByExpressionRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindByExpressionResponse.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindByIdRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderFindByIdResponse.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderInsertRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderInsertResponse.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderUpdateRequest.cs" />
+    <Compile Include="FolderMdl\Messaging\FolderUpdateResponse.cs" />
+    <Compile Include="FolderMdl\Sterategy\ChooseSterategy.cs" />
+    <Compile Include="FolderMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="FolderMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="FolderMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="FolderMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="FolderMdl\VMs\CommentExpVM.cs" />
+    <Compile Include="FolderMdl\VMs\CommentVM.cs" />
+    <Compile Include="FolderMdl\VMs\FolderExpVM.cs" />
+    <Compile Include="FolderMdl\VMs\FolderVM.cs" />
+    <Compile Include="FolderMdl\VMs\TypesOfFolderExpVM.cs" />
+    <Compile Include="FolderMdl\VMs\TypesOfFolderVM.cs" />
+    <Compile Include="GroupMdl\Imps\GroupService.cs" />
+    <Compile Include="GroupMdl\Mapping\GroupMapper.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupDeleteByIdRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupDeleteRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupDeleteResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindAllRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindAllResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindByExpressionExpRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindByExpressionExpResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindByExpressionRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindByExpressionResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindByIdRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupFindByIdResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupInsertRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupInsertResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupUpdateRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupUpdateResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupUserUpdateRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupUserUpdateResponse.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupUserFindRequest.cs" />
+    <Compile Include="GroupMdl\Messaging\GroupUserFindResponse.cs" />
+    <Compile Include="GroupMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="GroupMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="GroupMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="GroupMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="GroupMdl\VMs\GoupClaimVM.cs" />
+    <Compile Include="GroupMdl\VMs\GroupExpVM.cs" />
+    <Compile Include="GroupMdl\VMs\GroupModificationVM.cs" />
+    <Compile Include="GroupMdl\VMs\GroupVM.cs" />
+    <Compile Include="GroupMdl\VMs\GroupEditVM.cs" />
+    <Compile Include="GroupUserMdl\Imps\GroupUserService.cs" />
+    <Compile Include="GroupUserMdl\Mapping\GroupUserMapper.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserDeleteByIdRequest.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserDeleteRequest.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserDeleteResponse.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserFindAllRequest.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserFindAllResponse.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserFindByExpressionRequest.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserFindByExpressionResponse.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserFindByIdRequest.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserFindByIdResponse.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserInsertRequest.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserInsertResponse.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserUpdateRequest.cs" />
+    <Compile Include="GroupUserMdl\Messaging\GroupUserUpdateResponse.cs" />
+    <Compile Include="GroupUserMdl\VMs\GroupUserVM.cs" />
+    <Compile Include="ClientCenterStrategy\IClientCenterStrategy.cs" />
+    <Compile Include="ClientCenterStrategy\MainClientCenterStrategy.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reporting\RCommentMdl\Imps\ReportingCommentService.cs" />
+    <Compile Include="Reporting\RCommentMdl\Messaging\ReportCFCommentRRequest.cs" />
+    <Compile Include="Reporting\RCommentMdl\Messaging\ReportCFCommentRResponse.cs" />
+    <Compile Include="Reporting\RCommentMdl\VMs\ReportCFCommentRVM.cs" />
+    <Compile Include="Reporting\RCommentMdl\VMs\ReportClientFolderCommentRVM.cs" />
+    <Compile Include="Reporting\RCommentMdl\VMs\ReportFolderRVM.cs" />
+    <Compile Include="Reporting\RFileMdl\Imps\ReportingFileService.cs" />
+    <Compile Include="Reporting\RFileMdl\Messaging\ReportCFFileRRequest.cs" />
+    <Compile Include="Reporting\RFileMdl\Messaging\ReportCFFileRResponse.cs" />
+    <Compile Include="Reporting\RFileMdl\VMs\ReportCFFileRVM.cs" />
+    <Compile Include="Reporting\RFileMdl\VMs\ReportClientFolderFileRVM.cs" />
+    <Compile Include="Reporting\RFileMdl\VMs\ReportFolderRVM.cs" />
+    <Compile Include="Reporting\RUserLogTimeMdl\Imps\ReportingUserLogTimeService.cs" />
+    <Compile Include="Reporting\RUserLogTimeMdl\Messaging\ReportClientUserLogTimeRRequest.cs" />
+    <Compile Include="Reporting\RUserLogTimeMdl\Messaging\ReportClientUserLogTimeRResponse.cs" />
+    <Compile Include="Reporting\RUserLogTimeMdl\VMs\ReportCUserLogTimeRVM.cs" />
+    <Compile Include="Reporting\RUserLogTimeMdl\VMs\ReportClientUserLogTimeRVM.cs" />
+    <Compile Include="Reporting\RUserLogTimeMdl\VMs\ReportUserLogTimeRVM.cs" />
+    <Compile Include="Reporting\RFolderMdl\Imps\ReportingFolderService.cs" />
+    <Compile Include="Reporting\RFolderMdl\Messaging\ReportClientFolderRRequest.cs" />
+    <Compile Include="Reporting\RFolderMdl\Messaging\ReportClientFolderRResponse.cs" />
+    <Compile Include="Reporting\RFolderMdl\VMs\ReportCFolderRVM.cs" />
+    <Compile Include="Reporting\RFolderMdl\VMs\ReportClientFolderRVM.cs" />
+    <Compile Include="Reporting\RFolderMdl\VMs\ReportFolderRVM.cs" />
+    <Compile Include="Reporting\RUserLogTimeMdl\VMs\UserLogVM.cs" />
+    <Compile Include="ReportTitleMdl\Imps\ReportTitleService.cs" />
+    <Compile Include="ReportTitleMdl\Mapping\ReportTitleMapper.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleFindAllRequest.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleFindAllResponse.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleFindByIdRequest.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleFindByIdResponse.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleInsertRequest.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleInsertResponse.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleUpdateRequest.cs" />
+    <Compile Include="ReportTitleMdl\Messaging\ReportTitleUpdateResponse.cs" />
+    <Compile Include="ReportTitleMdl\VMs\ReportTitleVM.cs" />
+    <Compile Include="TypeofFileMdl\Imps\TypeofFileService.cs" />
+    <Compile Include="TypeofFileMdl\Mapping\TypeofFileMapper.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileDeleteByIdRequest.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileDeleteRequest.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileDeleteResponse.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileFindAllRequest.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileFindAllResponse.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileFindByExpressionRequest.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileFindByExpressionResponse.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileFindByIdRequest.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileFindByIdResponse.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileInsertRequest.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileInsertResponse.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileUpdateRequest.cs" />
+    <Compile Include="TypeofFileMdl\Messaging\TypeofFileUpdateResponse.cs" />
+    <Compile Include="TypeofFileMdl\VMs\TypeofFileVM.cs" />
+    <Compile Include="TypeofFolderMdl\Imps\TypeofFolderService.cs" />
+    <Compile Include="TypeofFolderMdl\Mapping\TypeofFolderMapper.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderDeleteByIdRequest.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderDeleteRequest.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderDeleteResponse.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderFindAllRequest.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderFindAllResponse.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderFindByExpressionRequest.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderFindByExpressionResponse.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderFindByIdRequest.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderFindByIdResponse.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderInsertRequest.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderInsertResponse.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderUpdateRequest.cs" />
+    <Compile Include="TypeofFolderMdl\Messaging\TypeofFolderUpdateResponse.cs" />
+    <Compile Include="TypeofFolderMdl\VMs\TypeofFolderVM.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Imps\UserLogTimeService.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Mapping\UserLogTimeMapper.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeDeleteByIdRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeDeleteRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeDeleteResponse.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindAllRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindAllResponse.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindByVMRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindByExpressionExpRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindByExpressionRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindByExpressionExpResponse.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindByExpressionResponse.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindByIdRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeFindByIdResponse.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeInsertRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeInsertResponse.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeUpdateRequest.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Messaging\UserLogTimeUpdateResponse.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Sterategy\ChooseSterategy.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\VMs\UserLogTimeExpVM.cs" />
+    <Compile Include="UserActivity\UserLogTimeMdl\VMs\UserLogTimeVM.cs" />
+    <Compile Include="UserManagementMdl\BB.cs" />
+    <Compile Include="UserManagementMdl\Configuration\ClaimsAccessAttribute.cs" />
+    <Compile Include="UserManagementMdl\Configuration\ClaimsRoles.cs" />
+    <Compile Include="UserManagementMdl\Configuration\IdentityConfigure.cs" />
+    <Compile Include="UserManagementMdl\Configuration\IdentityHelpers.cs" />
+    <Compile Include="UserManagementMdl\Imps\ClaimManagementService.cs" />
+    <Compile Include="UserManagementMdl\Imps\RoleManagementService.cs" />
+    <Compile Include="UserManagementMdl\Imps\UserManagementService.cs" />
+    <Compile Include="UserManagementMdl\Mapping\RoleMapper.cs" />
+    <Compile Include="UserManagementMdl\Mapping\UserMapper.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleDeleteByIdRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleDeleteResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleFindAllRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleFindAllResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleFindByIdRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleFindByIdResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleFindUserResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleFindUserRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleInsertRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleInsertResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleUpdateRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleUpdateResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleUpdateUserRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\RoleUpdateUserResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserInRoleFindRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserDeleteByIdRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserDeleteRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserDeleteResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindAllRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindAllResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindByExpressionExpRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindByExpressionExpResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindByExpressionRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindByExpressionResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindByIdRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserFindByIdResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserInRoleFindResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserInsertRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserInsertResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserLoginRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserLoginResponse.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserUpdateRequest.cs" />
+    <Compile Include="UserManagementMdl\Messaging\UserUpdateResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Imps\PermissionClaimsGroupProjectService.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Imps\PermissionClaimsProjectService.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Imps\PermissionClaimsGroupService .cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Imps\PermissionClaimsService.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Imps\PermissionReportClaimsService.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Mapping\PermissionClaimsMapper.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsFindByExpressionResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsFindByExpressionRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupInsertRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupDeleteRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsDeleteRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupInsertResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupDeleteResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsDeleteResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupFindAllRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsFindAllRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupFindAllResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsFindAllResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupUpdateRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsUpdateRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsGroupUpdateResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsUpdateResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsDeleteByGroupIdRequest.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Messaging\PermissionClaimsDeleteByGroupIdResponse.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\VMs\PermissionGroupUserClaimsVM.cs" />
+    <Compile Include="UserManagementMdl\PermissionClaimsMdl\VMs\PermissionClaimsVM.cs" />
+    <Compile Include="UserManagementMdl\Sterategy\ChooseSterategy.cs" />
+    <Compile Include="UserManagementMdl\Sterategy\ClientCenterFactory.cs" />
+    <Compile Include="UserManagementMdl\Sterategy\IClientCenterStrategy.cs" />
+    <Compile Include="UserManagementMdl\Sterategy\MainClientCenterStrategy.cs" />
+    <Compile Include="UserManagementMdl\Sterategy\OtherClientCenterStrategy.cs" />
+    <Compile Include="UserManagementMdl\VMs\ClaimVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\EditVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\GroupClaimVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\LoginVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\RegistrationVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\Role\RoleEditVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\Role\RoleModificationVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\Role\RoleVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\UserExpVM.cs" />
+    <Compile Include="UserManagementMdl\VMs\UserVM.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YA.Archive.Infrastructure\YA.Archive.Infrastructure.csproj">
+      <Project>{4fc8b5ff-ad4f-40fa-8068-6e04dbf72af1}</Project>
+      <Name>YA.Archive.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YA.Archive.Model\YA.Archive.Model.csproj">
+      <Project>{bd3a3d35-8272-4d71-9695-9e428ecae4b3}</Project>
+      <Name>YA.Archive.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YA.Infrastructure\YA.Infrastructure.csproj">
+      <Project>{17e8cbe1-2561-4885-ad74-039908bda606}</Project>
+      <Name>YA.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YA.Localization\YA.Localization.csproj">
+      <Project>{155cb02b-82db-47b4-88f3-f871b61511e1}</Project>
+      <Name>YA.Localization</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

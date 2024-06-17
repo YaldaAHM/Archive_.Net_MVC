@@ -1,0 +1,44 @@
+﻿
+
+@using System.Web.UI.WebControls;
+@using Stimulsoft.Report.Mvc;
+@{
+    ViewBag.Title = "ReportUserLogTimeReport";
+}
+
+
+
+
+<style>
+    .stiMvcViewerReportPanel table {
+        direction: ltr !important;
+    }
+</style>
+
+@Html.Partial("_SiteMap", ViewData["ReportUserLogTimeSiteMap"])
+<div>
+
+    @Html.Stimulsoft().RenderMvcViewerScripts()
+    @Html.Stimulsoft().RenderMvcDesignerScripts()
+    @Html.Stimulsoft().StiMvcViewer("MyViewr", new StiMvcViewerOptions()
+
+{
+
+
+    Localization = "~/Content/Reporting/fa.xml",
+    ActionGetReportSnapshot = "ReportUserLogTime",
+    ActionViewerEvent = "ViewerEvent",
+    Width = Unit.Percentage(100),
+    Theme = StiTheme.Office2013,
+    ActionPrintReport = "PrintReport",
+    ActionExportReport = "ExportReport",
+
+    ClientRequestTimeout = 9000,
+    Toolbar = {ShowAboutButton=false, MenuAnimation=false,
+            Alignment=StiContentAlignment.Default},
+    Appearance = { ShowTooltips = false ,
+    },
+})
+</div>
+
+

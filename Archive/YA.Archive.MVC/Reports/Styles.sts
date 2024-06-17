@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiStylesSheet">
+  <Styles isList="true" count="6">
+    <Style1 Ref="1" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>BlanchedAlmond</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,8.25,Regular,Point,False,178</Font>
+      <Name>Style1</Name>
+      <TextBrush>Black</TextBrush>
+    </Style1>
+    <Style2 Ref="2" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[199:210:224]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style2</Name>
+      <TextBrush>Black</TextBrush>
+    </Style2>
+    <Style3 Ref="3" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[213:232:234]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style3</Name>
+      <TextBrush>Black</TextBrush>
+    </Style3>
+    <Style4 Ref="4" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[237:227:249]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style4</Name>
+      <TextBrush>Black</TextBrush>
+    </Style4>
+    <Style5 Ref="5" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>Transparent</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style5</Name>
+      <TextBrush>Black</TextBrush>
+    </Style5>
+    <Style6 Ref="6" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[240:241:255]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style6</Name>
+      <TextBrush>Black</TextBrush>
+    </Style6>
+  </Styles>
+</StiSerializer>

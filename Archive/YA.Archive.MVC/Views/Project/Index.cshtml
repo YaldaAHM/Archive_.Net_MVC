@@ -1,0 +1,451 @@
+﻿@using System.Security.Claims
+@using YA.Archive.Infrastructure.Infrastructure.Permission
+@using YA.Archive.MVC2.Models.Folder
+@using YA.Archive.Service.FolderMdl.Mapping
+@using Kendo.Mvc.UI
+@using Microsoft.AspNetCore.Mvc.Localization
+
+
+@*@{
+        Layout = null;
+    }*@
+<script src="~/Scripts/kendo/2016.3.914/kendo.all.min.js"></script>
+
+
+@Html.Partial("_SiteMap", ViewData["ProjectSiteMap"])
+
+
+@(Html.Kendo().Grid<Project>().Name("Projects")
+
+        .Columns(columns =>
+        {
+        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox'  class='checkbox'/>").Title("<input type='checkbox'/>")
+                                     .Width(10).Title("Select").HtmlAttributes(new
+                                     {
+                                         @onclick = "click",
+                                         style = "align:center;float:none;text-align:center; font-size:12px; vertical-align: middle;"
+                                     })
+                                         .HeaderHtmlAttributes(new { style = "overflow: visible; white-space: normal; text-align:center; " });
+            columns.Template(t => { }).Title("Row No").ClientTemplate("#= renderNumber(data) #").Hidden(true);
+            columns.Template(t => { }).Title("Number").ClientTemplate("#= renderRecordNumber(data) #");
+
+            columns.Bound(c => c.Id).Hidden();
+            columns.Bound(c => c.Code).Title("Id");
+            columns.Bound(c => c.Name);
+          
+            columns.Bound(c => c.Description);
+            columns.Bound(p => p.KeyWorddd);
+          
+            if (Request.IsAuthenticated && !User.IsInRole(RolesT.MainCenter))
+            {
+                columns.ForeignKey(p => p.ClientCenterId, (System.Collections.IEnumerable) ViewData["ClientCenter"], "Id", "Name").Title("Client Center Name").Hidden();
+            }
+            else
+            {
+                columns.ForeignKey(p => p.ClientCenterId, (System.Collections.IEnumerable)ViewData["ClientCenter"], "Id", "Name").Title("Client Center Name");
+            }
+            columns.Bound(p => p.TypeofFolders).ClientTemplate("#= renderMultiSelectText(data.TypeofFolders) #")
+                .EditorTemplateName("TypeOfFolderEditor").Title("Document Type");
+            columns.Bound(p => p.CreateDate).Title("Creation Date");
+            columns.Bound(p => p.LastUpdateDate).Title("Last Edit Date");
+            columns.Bound(p => p.CreateUserName).Title("Created by");
+            columns.Bound(p => p.LastUpdateUserName).Title("Last edited by");
+
+
+
+            columns.Command(command =>
+            {
+
+                if (((ClaimsIdentity)User.Identity).HasClaim("Project", "CanEditProject"))
+                    command.Edit().Text("Edit")
+                        .UpdateText("Ok")
+                        .CancelText("Cancel");
+
+              
+
+            });
+            if (((ClaimsIdentity)User.Identity).HasClaim("Project", "CanDeleteProject"))
+                columns.Command(c => c.Custom("cDelete").Text("Delete<span class='k-icon k-delete'></span>").Click("customDelete").
+                     
+                      HtmlAttributes(new
+                      {
+                          style = "background:darksalmon",
+
+                      }));
+        })
+        .ToolBar(toolbar =>
+        {
+        toolbar.Template(@<text>
+            <div class="toolbar" style="float: left">
+                @if (((ClaimsIdentity)User.Identity).HasClaim("Project", "CanCreateProject"))
+                {
+                    <a class="k-button k-button-icontext k-grid-add" href="#">
+                        <i></i> Add New Item
+                    </a>
+                }
+               
+@if (((ClaimsIdentity)User.Identity).HasClaim("Project", "CanViewProject"))
+{
+    @Html.ActionLink(" Report  ", "Print", "ReportProject4",
+                    new { projectId = ViewBag.projectId }, new
+                    {
+                        @class = "k-button k-button-icontext",
+                        style = "background-color: lightsteelblue;"
+                    })
+}
+
+               
+                @if (((ClaimsIdentity)User.Identity).HasClaim("Project", "CanDeleteProject"))
+                {
+                    <a style='margin-left: 10px; background-color: lightsteelblue;'
+                       class='k-button k-button-icontext' id="actionButton" href='#'>
+                        &nbsp; &nbsp; Delete &nbsp;&nbsp;
+                    </a> }
+                <a style='margin-left: 10px;background-color: lightsteelblue;' class='k-button k-button-icontext' onclick='customCommand()' href='#'>
+                    &nbsp; &nbsp; Search &nbsp;&nbsp;
+                </a>
+                <div id="divt"> @Html.Partial("_SearchProject") </div>
+
+            </div>
+        </text>);
+        })
+     .Pageable(pager => pager
+         .Messages(messages => messages.Display("{0} to {1} . Total {2}")).Messages(messages => messages.Empty("No information has been registered")))
+
+     .Editable(editable =>
+     {
+         editable.Mode(GridEditMode.PopUp).TemplateName("Project").Window(w => w.Width(900).Title(""));
+         editable.DisplayDeleteConfirmation(false);
+     })
+     .Sortable()
+            .Groupable(g => g.Messages(m => m.Empty("Select")))
+                    .Events(e =>
+                    {
+                        e.Edit("onEdit");
+                        e.DataBound("onDataBound");
+                    })
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .Events(events =>
+        {
+            events.Error("error_handler");
+            events.RequestEnd("onRequestEnd");
+
+        })
+
+ .Model(model =>
+ {
+     model.Id(p => p.Id);
+     model.Field(p => p.Id).Editable(false);
+     model.Field(p => p.CreateDate).Editable(false);
+     //model.Field(p => p.ClientCenterId).DefaultValue(ViewBag.id).Editable(false);
+
+ })
+ .Create(update => update.Action("Create", "Project"))
+        .Read(read => read.Action("Read", "Project" ).Data("projectsReadData"))
+        .Update(update => update.Action("Update", "Project"))
+        .Destroy(update => update.Action("Delete", "Project"))
+    )
+         .Events(e =>
+         {
+             e.Edit("onEdit");
+             e.DataBound("onDataBound");
+         })
+
+        )
+
+
+<style>
+    .vis {
+        visibility: hidden;
+        display: none;
+    }
+
+    .multilinetextsize {
+        width: 300px;
+        height: 150px;
+    }
+</style>
+
+<script type="text/javascript">
+    function customCommand() {
+        //execute your custom logic
+        $("#divt").toggle("slow");
+
+    }
+
+    $(document).ready(function () {
+        $("#divt").toggle("9999999");
+
+
+
+    });
+    var rowNumber = 0;
+
+    function renderNumber(data) {
+        return ++rowNumber;
+    }
+    function renderRecordNumber(data) {
+        var page = parseInt($("#Projects").data("kendoGrid").dataSource.page()) - 1;
+        var pagesize = $("#Projects").data("kendoGrid").dataSource.pageSize();
+        return parseInt(rowNumber + (parseInt(page) * parseInt(pagesize)));
+    }
+    function onDataBound(e) {
+        rowNumber = 0;
+        var grid = this;
+
+        grid.tbody.find("tr[role='row']").each(function () {
+            var model = grid.dataItem(this);
+             if (model.IsUpdateCommentLockCreateUser || model.IsUpdateCommentLock) {
+                $(this).find(".k-grid-edit").addClass("k-state-disabled");
+                $(this).find(".k-grid-edit").remove();
+            }
+            if (model.IsDeleteCommentLockCreateUser || model.IsDeleteCommentLock) {
+                $(this).find(".k-grid-cDelete").addClass("k-state-disabled");
+                $(this).find(".k-grid-cDelete").remove();
+            }
+        });
+        if (ss == true) {
+            if (!e.sender.dataSource.view().length) {
+                Lobibox.notify('info', {
+                    title: 'Search',
+                    msg: "There are no items to display",
+                    position: 'bottom left',
+                });
+            } else {
+                Lobibox.notify('success', {
+                    title: 'Search',
+                    msg: "Search was done successfully.",
+                    position: 'bottom left',
+                });
+            }
+        }
+        ss = false;
+    }
+    function onEdit(e) {
+        if (!e.model.isNew()) { }
+
+        e.container.find(".k-grid-update").on("click", function (e) {
+
+        });
+    }
+    function onCancel(e) {
+       
+    };
+</script>
+
+<script type="text/javascript">
+    function onRequestEnd(e) {
+        if (e.type == "create" && !e.response.Errors) {
+            if (e.response == null || e.response.Errors == null) {
+                setTimeout(function myfunction() {
+                    Lobibox.alert('success', {
+                        msg: "Ok. done successfully",
+                        title: "successful",
+                        buttons: {
+                            ok: {
+                                text: "Ok",
+                                'class': 'btn btn-success bthwidth',
+                            }
+                        }
+                    });
+                    
+                }, 1000);
+                --rowNumber; --rowNumber; --rowNumber; --rowNumber;
+            }
+        }
+        else if (e.type == "destroy" && !e.response.Errors) {
+            if (e.response == null || e.response.Errors == null) {
+                setTimeout(function myfunction() {
+                    Lobibox.alert('success', {
+                        msg: "Delete was done successfully.",
+                        title: "successful",
+                        buttons: {
+                            ok: {
+                                text: "Ok",
+                                'class': 'btn btn-success bthwidth',
+                            }
+                        }
+                    });
+                   
+                }, 1000);
+            }
+        } else if (e.type == "update" && !e.response.Errors) {
+            if (e.response == null || e.response.Errors == null) {
+
+                setTimeout(function myfunction() {
+                    Lobibox.alert('success', {
+                        msg: "Edit was done successfully.",
+                        title: "successful",
+                        buttons: {
+                            ok: {
+                                text: "Ok",
+                                'class': 'btn btn-success bthwidth',
+                            }
+                        }
+                    });
+                   
+                }, 1000);
+                --rowNumber;
+            }
+        }
+       
+    }
+
+    var Err = "";
+
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Error :\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            e.sender.read();
+            e.sender._destroyed = [];
+            Lobibox.alert('error', {
+                msg: message,
+                title: "Error!",
+                buttons: {
+                    ok: {
+                        text: "Close",
+                        'class': 'btn btn-danger bthwidth',
+                    }
+                }
+            });
+            $("#Projects").data("kendoGrid").dataSource.read();
+        }
+    }
+</script>
+<script>
+    var ss = false;
+    var IsClickSearch = false;
+    $("#btnSearchT").click(function (e) {
+        e.preventDefault();
+        $("#divt").toggle("slow");
+
+    });
+    $("#btnSearch").click(function (e) {
+        e.preventDefault();
+        ss = true;
+        IsClickSearch = true;
+        $("#Projects").data("kendoGrid").dataSource.read();
+        IsClickSearch = false;
+        $("#divt").toggle("slow");
+
+    });
+
+    function projectsReadData() {
+        return {
+             sIsClickSearch: IsClickSearch,
+            sStartDate: $("#SStartDate").val(),
+            sEndDate: $("#SEndDate").val(),
+            sName: $("#SName").val(),
+            sClientCenterId: $("#SClientCenterId").val(),
+            sTypeofFolders: $("#STypeofFolders").val(),
+            sKeyWords: $("#SKeyWords").val(),
+            sCode: $("#SCode").val(),
+        };
+    }
+</script>
+<script type="text/javascript">
+            function renderMultiSelectText(selectListArray) {
+                if (selectListArray != undefined && selectListArray[0] != undefined) {
+
+                    var displayText;
+                    $.each(selectListArray, function (index) {
+                        if (displayText == undefined)
+                            displayText = selectListArray[index].Name + " ,";
+                        else
+                            displayText = displayText + selectListArray[index].Name + " ,";
+                    });
+                    return displayText.slice(0, -2);
+                } else
+                    return "";
+            }
+
+
+            function showFiles(e) {
+                e.preventDefault();
+                var d = this.dataItem($(e.currentTarget).closest("tr"));
+                window.location.href = "@Url.Action("IndexFileP", "File")?projectId=" + d.Id;
+            }
+</script>
+<script type="text/javascript">
+
+            function showComments(e) {
+                e.preventDefault();
+                var d = this.dataItem($(e.currentTarget).closest("tr"));
+
+                window.location.href = "@Url.Action("IndexGroup", "PermissionGroup")?groupId=" + d.Id;
+                
+            }
+</script>
+
+<script type="text/javascript">
+            $(document).ready(function() {
+                $('#sendPerm').click(function(e) {
+                    e.preventDefault();
+                    LoadAjaxContent('PermissionGroup/Index2?groupId=#= Id #');
+                });
+            });
+
+            $("#actionButton").click(function () {
+                var idsToSend = [];
+                var dd = "";
+                var grid = $("#Projects").data("kendoGrid");
+                var ds = grid.dataSource.view();
+                var FolderId = "";
+                for (var i = 0; i < ds.length; i++) {
+                    var row = grid.table.find("tr[data-uid='" + ds[i].uid + "']");
+                    var checkbox = $(row).find(".checkbox");
+                    if (checkbox.is(":checked")) {
+                        idsToSend.push(ds[i].Id);
+                        FolderId = ds[i].FolderId;
+                    }
+                }
+                dd = idsToSend.toString();
+                //alert(dd);
+                $.ajax({
+                    url: '@Url.Action("MultiDelete", "Project")',
+                    type: "Post",
+                    data: { Ids: dd },
+                    dataType: 'json',
+                    success: function (result) {
+                        $("#Projects").data("kendoGrid").dataSource.read();
+                        if (result.IsSuccess) {
+                            Lobibox.alert('success', {
+                                msg: result.Message,
+                                title: "successful",
+                                buttons: {
+                                    ok: {
+                                        text: "Ok",
+                                        'class': 'btn btn-success bthwidth',
+                                    }
+                                }
+                            });
+                        } else {
+                            Lobibox.alert('error', {
+                                msg: result.Message,
+                                title: "Error!",
+                                buttons: {
+                                    ok: {
+                                        text: "Close",
+                                        'class': 'btn btn-danger bthwidth',
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+                });
+                //this obviously won't work , but just to illustrate the point.
+                $.post("/whatever", { ids: idsToSend });
+            });
+</script>
+

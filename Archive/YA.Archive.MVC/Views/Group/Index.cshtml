@@ -1,0 +1,580 @@
+﻿@using System.Security.Claims
+@using YA.Archive.Infrastructure.Infrastructure.Permission
+@using YA.Archive.MVC2.Models
+@using YA.Archive.MVC2.Models.Group
+@using Kendo.Mvc.UI
+@using Microsoft.AspNet.Identity
+
+@*@{
+        Layout = null;
+    }*@
+<script src="~/Scripts/kendo/2016.3.914/kendo.all.min.js"></script>
+<style>
+
+    .inpust {
+        width: 200px;
+        margin-left: -70px;
+    }
+
+    #ClientCenterId {
+        width: 200px;
+        margin-left: -70px;
+    }
+    .k-picker-wrap {
+        width: 180px;
+        margin-left: -70px;
+    }
+</style>
+
+        @Html.Partial("_SiteMap", ViewData["GroupSiteMap"])
+ 
+
+        @(Html.Kendo().Grid<GroupUs>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox'  class='checkbox'/>").Title("<input type='checkbox'/>")
+                                     .Width(10).Title("Select").HtmlAttributes(new
+                                     {
+                                         @onclick = "click",
+                                         style = "align:center;float:none;text-align:center; font-size:12px; vertical-align: middle;"
+                                     })
+                                         .HeaderHtmlAttributes(new { style = "overflow: visible; white-space: normal; text-align:center; " });
+            columns.Template(t => { }).Title("Row No").ClientTemplate("#= renderNumber(data) #").Hidden(true);
+            columns.Template(t => { }).Title("Number").ClientTemplate("#= renderRecordNumber(data) #");
+            columns.Bound(p => p.Id).Sortable(false).Visible(false);
+            columns.Bound(p => p.Name);
+            if (Request.IsAuthenticated && !User.IsInRole(RolesT.MainCenter))
+            {
+                columns.ForeignKey(p => p.ClientCenterId, (System.Collections.IEnumerable) ViewData["ClientCenter"], "Id", "Name").Hidden();
+            }
+            else
+            {
+                columns.ForeignKey(p => p.ClientCenterId, (System.Collections.IEnumerable) ViewData["ClientCenter"], "Id", "Name");}
+            columns.Bound(p => p.CreateDate);
+            columns.Bound(p => p.ValidityDate).Width(150);
+            if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators) || User.IsInRole(RolesT.AdminClient)))
+            {
+                columns.Command(command => command.Custom("System Access").Click("showPermission")).Title("System Access");
+            } 
+            columns.Command(command =>
+            {
+                
+                if (((ClaimsIdentity)User.Identity).HasClaim("Group", "CanEditGroup"))
+                    command.Edit().Text("Edit")
+.UpdateText("Ok")
+.CancelText("Cancel");
+               
+
+
+
+
+
+            });
+            if (((ClaimsIdentity)User.Identity).HasClaim("Group", "CanDeleteGroup"))
+                columns.Command(c => c.Custom("Custom Delete").Text("Delete<span class='k-icon k-delete'></span>").Click("customDelete").
+                 
+                  HtmlAttributes(new
+                  {
+                      style = "background:darksalmon",
+
+                  }));
+        })
+        .ToolBar(toolbar =>
+        {
+        toolbar.Template(@<text>
+            <div class="toolbar" style="float: left">
+                @if (((ClaimsIdentity)User.Identity).HasClaim("Group", "CanCreateGroup"))
+                {
+                    <a class="k-button k-button-icontext k-grid-add" href="#">
+                        <i class=""></i> Add New Group
+                    </a>
+                }
+                @if (((ClaimsIdentity)User.Identity).HasClaim("Group", "CanDeleteGroup"))
+                {
+                    <a style='margin-left: 10px; background-color: lightsteelblue;'
+                       class='k-button k-button-icontext' id="actionButton" href='#'>
+                        &nbsp; &nbsp; Delete &nbsp;&nbsp;
+                    </a> }
+@if (((ClaimsIdentity) User.Identity).HasClaim("Group", "CanViewGroup"))
+{
+    <a style='margin-left: 10px; background-color: lightsteelblue;' class='k-button k-button-icontext' onclick='searchCommand()' href='#'>
+        &nbsp; &nbsp; Search &nbsp;&nbsp;
+    </a>
+    <div id="divt"> @Html.Partial("_SearchGroup") </div>
+}
+            </div>
+        </text>);
+        })
+
+        
+        .Editable(editable =>
+        {
+            editable.Mode(GridEditMode.PopUp).Window(w => w.Title(""));
+            editable.DisplayDeleteConfirmation(false);
+          
+
+        })
+
+    .Pageable(pager => pager
+            .Messages(messages => messages.Display("{0} to {1} . Total {2}")).Messages(messages => messages.Empty("No information has been registered")))
+    .Sortable()
+            .Groupable(g => g.Messages(m => m.Empty("Select")))
+                    .Events(events => events.Edit("onEdit"))
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .Events(events =>
+        {
+            events.Error("error_handler");
+            events.RequestEnd("onRequestEnd");
+
+        })
+ .Model(model =>
+ {
+     model.Id(p => p.Id);
+     model.Field(p => p.Id).Editable(false);
+     model.Field(p => p.ClientCenterId);
+     model.Field(p => p.CreateDate).Editable(false);
+     model.Field(p => p.ValidityDate);
+
+ })
+ .Create(update => update.Action("Create", "Group"))
+        .Read(read => read.Action("Read", "Group").Data("groupsReadData"))
+        .Update(update => update.Action("Edit", "Group"))
+        .Destroy(update => update.Action("Delete", "Group"))
+    )
+          .Events(e => e.Edit("onEdit"))
+          .Events(e => e.DataBound("onDataBound"))
+        )
+      
+        <style>
+            .vis {
+                display: none;
+                visibility: hidden;
+                height: 0px;
+                width: 0px;
+            }
+
+            .multilinetextsize {
+                width: 300px;
+                height: 200px;
+            }
+        </style>
+
+    <script type="text/javascript">
+        function searchCommand() {
+            $("#divt").toggle("slow");
+        }
+
+        $(document).ready(function() {
+            $("#divt").toggle("9999999");
+        });
+        var rowNumber = 0;
+
+        function renderNumber(data) {
+            return ++rowNumber;
+        }
+
+        function renderRecordNumber(data) {
+            var page = parseInt($("#grid").data("kendoGrid").dataSource.page()) - 1;
+            var pagesize = $("#grid").data("kendoGrid").dataSource.pageSize();
+            return parseInt(rowNumber + (parseInt(page) * parseInt(pagesize)));
+        }
+
+        function onDataBound(e) {
+            rowNumber = 0;
+            if (ss == true) {
+                if (!e.sender.dataSource.view().length) {
+                     Lobibox.notify('info', {
+                        title: 'Search',
+                        msg: "There are no items to display",
+                        position: 'bottom left',
+                    });
+                } else {
+                    Lobibox.notify('success', {
+                        title: 'Search',
+                        msg: "Search was done successfully.",
+                        position: 'bottom left',
+                    });
+                }
+            }
+            ss = false;
+        }
+
+        function onEdit(e) {
+
+            Err = "";
+            if (e.model.isNew()) {
+
+                $("#grid tbody [data-role=dropdownlist]").each(function() {
+                    var ddl = $(this).data("kendoDropDownList");
+                    if (ddl) {
+                        ddl.options.optionLabel = "Select";
+                        ddl.refresh();
+                        ddl.value("");
+                    }
+                });
+
+
+            } else {
+
+                $('[name="ClientCenterId"]').attr("Hidden", true);
+                $('label[for="' + $("#ClientCenterId").attr('id') + '"]').remove();
+                $('[name="ClientCenterId"]').attr("Hidden", true);
+                $('[data-valmsg-for="ClientCenterId"]').remove();
+                $('[aria-owns="ClientCenterId_listbox"]').parent('div').remove();
+                var labelEditCommentLockDate3 = $("label[for='" + $("#ClientCenterId").attr('id') + "']");
+                $(labelEditCommentLockDate3).remove();
+                $('[name="ClientCenterId"]').parent('div').remove();
+                $('[name="ClientCenterId"]').remove();
+                $('label[for="' + $("#ClientCenterId").attr('id') + '"]').parent('div').remove();
+                $('label[for="' + $("#ClientCenterId").attr('id') + '"]').remove();
+                var labelRemoveCommentLockDate3 = $("label[for='" + $("#ClientCenterId").attr('id') + "']");
+
+                $('label[for="' + $("#ClientCenterId").attr('id') + '"]').parent('div').remove();
+                //labelId.parent().attr('id')
+                $(labelRemoveCommentLockDate3).remove();
+
+
+            }
+
+            @if (!User.IsInRole(RolesT.MainCenter))
+                {
+
+            @: $('[name="ClientCenterId"]').attr("Hidden", true);
+                                                                                                            @:$('label[for="' + $("#ClientCenterId").attr('id') + '"]').remove();
+           @: $('[name="ClientCenterId"]').attr("Hidden", true);
+            @: $('[data-valmsg-for="ClientCenterId"]').remove();
+           @: $('[aria-owns="ClientCenterId_listbox"]').parent('div').remove();
+            @: var labelEditCommentLockDate3 = $("label[for='" + $("#ClientCenterId").attr('id') + "']");
+           @: $(labelEditCommentLockDate3).remove();
+@: $('[name="ClientCenterId"]').parent('div').remove();
+ @:$('[name="ClientCenterId"]').remove();
+@:$('label[for="' + $("#ClientCenterId").attr('id') + '"]').parent('div').remove();
+@:$('label[for="' + $("#ClientCenterId").attr('id') + '"]').remove();
+ @:var labelRemoveCommentLockDate3 = $("label[for='" + $("#ClientCenterId").attr('id') + "']");
+
+   @:$('label[for="' + $("#ClientCenterId").attr('id') + '"]').parent('div').remove();
+            //labelId.parent().attr('id')
+@:$(labelRemoveCommentLockDate3).remove();
+           }
+
+
+
+                $('[aria-owns="ValidityDate_dateview"]').addClass("inpust");
+
+                $('[aria-owns="ClientCenterId_listbox"]').addClass("inpust");
+                $("#Name").addClass("inpust");
+                $("#ValidityDate").addClass("inpust");
+                $("#ClientCenterId").addClass("inpust");
+
+                $('[name="Id"]').attr("Hidden", true);
+                $('label[for="' + $("#Id").attr('id') + '"]').remove();
+                $('[name="CreateDate"]').attr("Hidden", true);
+                $('[data-valmsg-for="CreateDate"]').remove();
+                var labelEditCommentLockDate = $("label[for='" + $("#CreateDate").attr('id') + "']");
+                $(labelEditCommentLockDate).remove();
+                $('[name="CreateDate"]').parent('div').remove();
+                $('[name="CreateDate"]').remove();
+                $('label[for="' + $("#CreateDate").attr('id') + '"]').parent('div').remove();
+                $('label[for="' + $("#CreateDate").attr('id') + '"]').remove();
+                var labelRemoveCommentLockDate = $("label[for='" + $("#CreateDate").attr('id') + "']");
+
+                $('label[for="' + $("#CreateDate").attr('id') + '"]').parent('div').remove();
+                //labelId.parent().attr('id')
+                $(labelRemoveCommentLockDate).remove();
+                $('[aria-controls="ValidityDate_dateview"]').click(function () {
+                    var ValidityDate = $('#ValidityDate').val();
+                    $.ajax({
+                        url: '/Group/CommentsValidityDate',
+                        type: 'Post',
+                        data: {
+                            ValidityDate: "1100/11/22",
+                        },
+                        success: function (data) {
+                            $('#ValidityDate').val("");
+                        }
+                    });
+                });
+
+                $("#ValidityDate").keydown(function (e) {
+                    var ValidityDate = $('#ValidityDate').val();
+
+                    if (e.keyCode == 8 || e.keyCode == 46) {
+                        $.ajax({
+                            url: '/Group/CommentsValidityDate',
+                            type: 'POST',
+                            data: {
+                                ValidityDate: "1300/10/10",
+                            },
+                            success: function (data) {
+
+
+                                $('#ValidityDate').css({
+                                    "color": "white"
+                                });
+                                $('#ValidityDate').val("1396/03/28");
+                                if ($('#ValidityDate').val() == "1396/03/28") {
+                                    $('#ValidityDate').val("1396/03/27");
+                                }
+                                $('[aria-controls="ValidityDate_dateview"]').click(function () {
+
+                                    $('#ValidityDate').css({
+                                        "color": "black"
+                                    });
+                                });
+
+
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            url: '/Group/CommentsValidityDate',
+                            type: 'POST',
+                            data: {
+                                ValidityDate: ValidityDate,
+                            },
+                            success: function (data) {
+                                $('#ValidityDate').val("");
+                            }
+                        });
+                    }
+                });
+
+
+              
+                e.container.find(".k-grid-update").on("click", function(e) {
+
+                    //e.stopPropagation();
+                    // alert("fdsxz");
+                    //make ajax call, show progress bar
+                });
+            }
+
+    </script>
+
+    <script type="text/javascript">
+        function onRequestEnd(e) {
+            if (e.type == "create" && !e.response.Errors) {
+                if (e.response == null || e.response.Errors == null) {
+                    setTimeout(function myfunction() {
+                      
+                        Lobibox.alert('success', {
+                            msg: "Ok. done successfully",
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text:"Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }}
+                        });
+
+             
+                    }, 1000);
+                    --rowNumber; --rowNumber; --rowNumber; --rowNumber;
+                }
+            }
+            else if (e.type == "destroy" && !e.response.Errors) {
+                if (e.response == null || e.response.Errors == null) {
+                    setTimeout(function myfunction() {
+                        Lobibox.alert('success', {
+                            msg: "Delete was done successfully.",
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                     
+                    }, 1000);
+                }
+            }
+           else if (e.type == "update" && !e.response.Errors) {
+               if (e.response == null || e.response.Errors == null) {
+
+                   setTimeout(function myfunction() {
+
+                       Lobibox.alert('success', {
+                           msg: "Edit was done successfully.",
+                           title: "successful",
+                           buttons: {
+                               ok: {
+                                   text: "Ok",
+                                   'class': 'btn btn-success bthwidth',
+                               }
+                           }
+                       });
+                       
+                   }, 1000);
+                   --rowNumber;
+            }}
+           
+        }
+
+        var Eb;
+        var t=false;
+        var Err = "";
+        function error_handler(e) {
+            e.preventDefault();
+            Err = "Error";
+            if (e.errors) {
+                Err = "Error";
+                var message = "Error :\n";
+                $.each(e.errors, function (key, value) {
+                    if ('errors' in value) {
+                        if (key == "ESearchM") {
+                            t = true;
+                            $.each(value.errors, function() {
+                                Eb = this + "\n";
+                            });
+                            alert(Eb);
+                        }
+                        else{   $.each(value.errors, function() {
+                            message += this + "\n";
+                        });}
+                        
+                    }
+                });
+                if(t==false){
+                    // alert(message);
+                    Err = "Error";
+                    e.sender.read();
+                    e.sender._destroyed = [];
+                    Lobibox.alert('error', {
+                        msg: message,
+                        title: "Error!",
+                        buttons: {
+                            ok: {
+                                text: "Close",
+                                'class': 'btn btn-danger bthwidth',
+                            }
+                        }
+                    });
+                    $("#grid").data("kendoGrid").dataSource.read();}
+            }
+        }
+    </script>
+        <script type="text/javascript">
+
+            function showDetails(e) {
+                e.preventDefault();
+                var d = this.dataItem($(e.currentTarget).closest("tr"));
+                window.location.href = "@Url.Action("Index", "TypeOfFile")/" + d.Id;
+            }
+        </script>
+        <script type="text/javascript">
+
+            function showPermission(e) {
+                e.preventDefault();
+                var d = this.dataItem($(e.currentTarget).closest("tr"));
+
+                window.location.href = "@Url.Action("IndexGroup", "PermissionGroup")?groupId=" + d.Id;
+               
+            }
+            function showPermissionProject(e) {
+                e.preventDefault();
+                var d = this.dataItem($(e.currentTarget).closest("tr"));
+
+                window.location.href = "@Url.Action("IndexGroup", "PermissionGroupProject")?groupId=" + d.Id;
+                
+            }
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#sendPerm').click(function(e) {
+                    e.preventDefault();
+                    LoadAjaxContent('PermissionGroup/Index2?groupId=#= Id #');
+                });
+            });
+        </script>
+    <script>
+        var ss = false;
+        var IsClickSearch = false;
+        $("#btnSearchT").click(function(e) {
+            e.preventDefault();
+            $("#divt").toggle("slow");
+
+        });
+        $("#btnSearch").click(function(e) {
+            e.preventDefault();
+            ss = true;
+            IsClickSearch = true;
+            $("#grid").data("kendoGrid").dataSource.read();
+            IsClickSearch = false;
+            $("#divt").toggle("slow");
+           
+               
+
+
+
+        });
+
+        function groupsReadData() {
+            return {
+                //SClientCenterId: $("#SClientCenterId").find(":selected").val(),
+                sIsClickSearch: IsClickSearch,
+                //sStartDate: $("#SStartDate").val(),
+                //sEndDate: $("#SEndDate").val(),
+                sName: $("#SName").val(),
+                sClientCenterId: $("#SClientCenterId").val(),
+            };
+        }
+
+        $("#actionButton").click(function () {
+            var idsToSend = [];
+            var dd = "";
+            var grid = $("#grid").data("kendoGrid");
+            var ds = grid.dataSource.view();
+
+            for (var i = 0; i < ds.length; i++) {
+                var row = grid.table.find("tr[data-uid='" + ds[i].uid + "']");
+                var checkbox = $(row).find(".checkbox");
+                if (checkbox.is(":checked")) {
+                    idsToSend.push(ds[i].Id);
+
+                }
+            }
+            dd = idsToSend.toString();
+            //alert(dd);
+            $.ajax({
+                url: '@Url.Action("MultiDelete", "Group")',
+                type: "Post",
+                data: { Ids: dd },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        Lobibox.alert('success', {
+                            msg: result.Message,
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                    } else {
+                        Lobibox.alert('error', {
+                            msg: result.Message,
+                            title: "Error!",
+                            buttons: {
+                                ok: {
+                                    text: "Close",
+                                    'class': 'btn btn-danger bthwidth',
+                                }
+                            }
+                        });
+                    }
+                    $("#grid").data("kendoGrid").dataSource.read();
+                }
+            });
+            //this obviously won't work , but just to illustrate the point.          
+            $.post("/whatever", { ids: idsToSend });
+        });
+    </script>
+   

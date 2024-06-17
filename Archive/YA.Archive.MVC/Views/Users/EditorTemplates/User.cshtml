@@ -1,0 +1,398 @@
+﻿@using YA.Archive.Infrastructure.Infrastructure.Permission
+@model YA.Archive.MVC2.Models.User.User
+<style>
+    .sp {
+        margin-top: 15px;
+    }
+</style>
+
+<br/>
+
+<div style="padding-left: 20px">
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.ClientCenterId2)
+<div class="row sp">
+    @Html.LabelFor(model => model.UserName, new { @class = "col-sm-2" })
+    
+    <div class="col-sm-5">
+        @Html.TextBoxFor(model => model.UserName, new { @class = "k-textbox", style = "width: 90%" })
+        @Html.ValidationMessageFor(model => model.UserName)
+    </div>
+</div>
+    <div class="row sp">
+        @Html.LabelFor(m => m.Password, new {@class = "col-sm-2"})
+        <div class="col-sm-5">
+            @Html.PasswordFor(model => model.Password, new {@class = "k-textbox", style = "width: 90%"})
+            @*@Html.ValidationMessageFor(model => model.Password)*@
+        </div>
+    </div>
+@if (Request.IsAuthenticated && User.IsInRole(RolesT.MainCenter))
+{
+    <div class="row sp">
+        @Html.LabelFor(m => m.ClientCenterId, new {@class = "col-sm-2"})
+        <div class="col-sm-5">
+            @*@Html.DropDownListFor(m => m.Folder.ClientCenterId, new SelectList(Model.ClientCenters, "Id", "Name")
+            , new { @class = "populate,placeholder" })*@
+        @*@(Html.Kendo().ComboBox()
+                  .Name("ClientCenterId")
+                  .HtmlAttributes(new {style = "width: 90%"})
+                  .DataTextField("Name")
+                  .DataValueField("Id")
+                  .Suggest(true)
+                  .Filter("contains")
+                  .Placeholder("Select Client Center")
+
+                  .DataSource(source => source
+                      .Custom()
+                      .Transport(transport => transport
+                          .Read(read => read.Action("DropClientCenter", "Project").DataType("json"))
+                      )
+                  )
+                  )*@
+            <input id="iscenter" value="true" type="hidden"/>
+          
+            <select id="ClientCenterId" name="ClientCenterId"></select>
+        </div>
+    </div>
+}
+@*else
+{*@
+   
+    @*@(Html.Kendo().ComboBox()
+                  .Name("ClientCenterId")
+                  .HtmlAttributes(new { style = "width: 90%" })
+                  .DataTextField("Name")
+                  .DataValueField("Id")
+                  .Suggest(true)
+                  .Filter("contains")
+                  .Placeholder("Select Client Center")
+                  .AutoBind(true)
+                  .Value("2")
+                  .DataSource(source => source
+                      .Custom()
+                      .Transport(transport => transport
+                          .Read(read => read.Action("DropClientCenter", "Project").DataType("json"))
+                      )
+                  )
+    )*@
+@*}*@
+    <div class="row sp">
+        @Html.Label("Group", new {@class = "col-sm-2"})
+        <div class="col-sm-5">
+            @*@(Html.Kendo().MultiSelect()
+                  .Name("Groups")
+                  .DataValueField("Id")
+                  .DataTextField("Name")
+                  .Placeholder(" Select User Group   ")
+                  //.HighlightFirst(true)
+                  .BindTo((System.Collections.IEnumerable) ViewData["Group"])
+                  //.BindTo((System.Collections.IEnumerable)ViewBag.ggg)
+                  //.HtmlAttributes(new { data_value_primitive = "true" })
+                  )*@
+            @*@(Html.Kendo().MultiSelect()
+            .Name("Groups")
+            .DataValueField("Id")
+            .DataTextField("Name")
+            .Placeholder(" Selection of Type Of Project ")
+
+            .DataSource(source => source
+                .Custom()
+                .Transport(transport => transport
+                    .Read(read => read.Action("MultiTypeOfFolder", "Project").DataType("json"))
+                )
+            )
+            )*@
+            @*<script>
+                function filterProjects() {
+                    return {
+                        clientCenterId: $("#ClientCenterId").val()
+                    };
+                }
+            </script>*@
+                        @*@(Html.Kendo().MultiSelect()
+         .Name("Groups")
+         .HtmlAttributes(new {style = "width:100%;"})
+         .Placeholder("Select")
+         .DataTextField("Name")
+         .DataValueField("Id")
+         .Filter(FilterType.Contains)
+         .BindTo((System.Collections.IEnumerable) ViewData["Group"])
+         )
+        $('#Groups_taglist').text("");
+                   $('#Groups_taglist').val('');
+                   $('#Groups_taglist').empty();
+                       $("#Groups_taglist").html('');
+
+
+                  $.ajax({
+                                url: "/Group/GetGroups",
+                                data: {
+                                    field: $("#ClientCenterId").find(":selected").val(),
+
+                                },
+                                type: "Post",
+                                dataType: "Json",
+                                success: function (result) {
+                                    ggg = result;
+                                },
+                                error: function () {
+                                    alert("Error");
+                                }
+
+                            });   *@
+            <select id="Groups" name="Groups"></select>
+          
+        <div>
+               
+            </div>
+
+            <script>
+                function convertValues(value) {
+                    var data = {};
+
+                    value = $.isArray(value) ? value : [value];
+
+                    for (var idx = 0; idx < value.length; idx++) {
+                        data["values[" + idx + "]"] = value[idx];
+                    }
+
+                    return data;
+                }
+                $(function () {
+                    var gggg;
+                    var isc;
+                    setTimeout(function myfunction() {
+                        isc = $("#iscenter").val();
+                        gggg = $("#ClientCenterId2").val();
+                    }, 1000);
+                    var ggg;
+                        var gg = $("#ClientCenterId").find(":selected").val();
+                
+                        if (gg == 0 || gg == null || gg == "") {
+                            gg = $("#ClientCenterId2").val();
+                        }
+                   
+                        var productsDataSource = new kendo.data.DataSource({
+
+                            type: "Json",
+                            serverFiltering: true,
+                            transport: {
+                                read: {
+
+                                    url: function () { return "/Group/GetGroups?field=" + gg + "&value=" + gggg + "&CompanyName=" + isc },
+                                    success: function (data) {
+                                        options.success(data);
+                                    }
+                                }
+                            }
+                        });
+                        setTimeout(function myfunction() {
+                        $("#Groups").kendoMultiSelect({
+                            autoBind: false,
+                            dataTextField: "Name",
+                            dataValueField: "Id",
+                            dataSource: productsDataSource
+                        });
+                        }, 1000);
+                  
+                   
+                   
+                   
+
+                    $("#ClientCenterId").kendoDropDownList({
+                       
+                        dataTextField: "Name",
+                        dataValueField: "Id",
+                        optionLabel: "Select",
+           
+                        dataSource: {
+                            type: "Json",
+                            serverFiltering: true,
+                            transport: {
+                                read: {
+                                    url: "/Project/DropClientCenter1"
+                                }
+                            }
+                        },
+                        change: function () {
+                            gg = $("#ClientCenterId").find(":selected").val();
+                            $("[data-role='multiselect']").each(function(e) {
+
+                                var multi = $(this).data("kendoMultiSelect");
+                                multi.value("");
+                                multi.input.blur();
+                            });
+                            
+                           
+                          
+                            var filters = buildFilters([this.dataItem()]);
+                            productsDataSource.filter(filters);}
+                       
+                        
+                    });
+
+                    function buildFilters(dataItems) {
+                        
+                        var filters = [];
+                        var length = dataItems.length;
+                        var supplierID;
+                        var idx = 0;
+
+                        for (; idx < length; idx++) {
+                            supplierID = parseInt(dataItems[idx].SupplierID);
+
+                            if (!isNaN(supplierID)) {
+                                filters.push({
+                                    field: "Id",
+                                    operator: "eq",
+                                    value: supplierID
+                                });
+                            }
+                        }
+                        return filters;
+                    }
+                });
+            </script>
+            @*@Html.ListBox("Groups", ViewBag.TypeOfFilelist as MultiSelectList,
+                        new
+                        {
+                            @class = "chzn-select",
+                            data_placeholder = "Select",
+                            style = "width:350px; "
+                        })*@
+        </div>
+
+
+    </div>
+    @*<div>
+        supplier: <select id="suppliers"></select>
+    </div>
+    <div>
+        product: <select id="products"></select>
+    </div>
+    <script>
+      $(function() {
+        var productsDataSource = new kendo.data.DataSource({
+            type: "Json",
+          serverFiltering: true,
+          transport: {
+            read: {
+                url: "/Group/GetGroupsddd",
+            }
+          }
+        });
+
+        $("#products").kendoMultiSelect({
+          autoBind: false,
+          dataTextField: "Name",
+          dataValueField: "Id",
+          dataSource: productsDataSource
+        });
+
+        $("#suppliers").kendoDropDownList({
+          optionLabel: "Select supplier",
+          dataTextField: "Name",
+          dataValueField: "Id",
+          dataSource: {
+            type: "Json",
+            serverFiltering: true,
+            transport: {
+              read: {
+                  url: "/Project/DropClientCenter"
+              }
+            }
+          },
+          change: function() {
+            var filters = buildFilters([this.dataItem()]);
+            productsDataSource.filter(filters);
+          }
+        });
+
+        function buildFilters(dataItems) {
+          var filters = [];
+          var length = dataItems.length;
+          var supplierID;
+          var idx = 0;
+
+          for (; idx < length; idx++) {
+            supplierID = parseInt(dataItems[idx].Id);
+
+            if (!isNaN(supplierID)) {
+              filters.push({
+                  field: "Id",
+                operator: "eq",
+                Id: $("#suppliers").val()
+              });
+            }
+          }
+          return filters;
+        }
+      });
+    </script>*@
+
+</div>
+<script type="text/javascript">
+
+    function onEdit(e) {
+
+        $('[name="Id"]').attr("Hidden", true);
+        if (e.model.isNew()) {
+
+            $("#grid tbody [data-role=dropdownlist]").each(function() {
+                var ddl = $(this).data("kendoDropDownList");
+                if (ddl) {
+                    ddl.options.optionLabel = "Select";
+                    ddl.refresh();
+                    ddl.value("");
+                }
+            });
+
+        }
+    }
+
+    //$("#ClientCenterId").change(function(e) {
+    //    e.preventDefault();
+    //    $.ajax({
+    //        url: "/Group/GetGroupsd",
+    //        data: { Id: $("#ClientCenterId").val() },
+    //        type: "post",
+    //        dataType: "Json",
+    //        success: function(data) {
+    //            $('#Groups').empty();
+    //            $.each(data, function(i, data) {
+    //                $('<option>',
+    //                {
+    //                    value: data.Id,
+    //                    text: data.Name
+    //                }).html(data.Name).appendTo("#Groups");
+    //            });
+
+    //        },
+    //        error: function() {
+    //            alert("Error");
+    //        }
+    //    });
+    //});
+    //$("#ClientCenterId").change(function(e) {
+    //    e.preventDefault();
+
+    //    $.ajax({
+    //        url: "/Group/GetGroups",
+    //        data: {
+    //            field: $("#ClientCenterId").find(":selected").val(),
+
+    //        },
+    //        type: "Post",
+    //        dataType: "Json",
+    //        success: function (result) {
+
+    //        },
+    //        error: function () {
+    //            alert("Error");
+    //        }
+    //    });
+    //});
+
+</script>
+
+@*<script>    $(".chzn-select").select2(); </script>*@

@@ -1,0 +1,16 @@
+﻿
+    @{
+        Layout = null;
+    }
+
+    @(Html.Kendo().MultiSelect()
+                                  .Name("Groups")
+                                      .DataValueField("Id")
+                                      .DataTextField("Name")
+                              
+                                      .BindTo((System.Collections.IEnumerable)ViewData["Group"])
+                                    
+                                     )
+
+
+  

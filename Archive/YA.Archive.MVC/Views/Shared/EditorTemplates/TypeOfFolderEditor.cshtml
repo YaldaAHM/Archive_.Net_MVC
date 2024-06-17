@@ -1,0 +1,15 @@
+﻿
+    @{
+        Layout = null;
+    }
+@*@Model.Id*@
+    @(Html.Kendo().MultiSelect()
+                                  .Name("TypeofFolders")
+                                      .DataValueField("Id")
+                                      .DataTextField("Name")
+                           
+                                      .BindTo((System.Collections.IEnumerable)ViewData["TypeofFolder"])
+                                  
+                                     )
+<script>
+</script>

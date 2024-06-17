@@ -1,0 +1,439 @@
+﻿@using System.Security.Claims
+@using YA.Archive.MVC2.Models.Folder
+@using YA.Archive.Service.FolderMdl.Mapping
+@using Kendo.Mvc.UI
+
+@*@{
+        Layout = null;
+    }*@
+<script src="~/Scripts/kendo/2016.3.914/kendo.all.min.js"></script>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @Html.Partial("_SiteMap", ViewData["CommentSiteMap"])
+        @*@(Html.Kendo().Grid<YA.Archive.Service.FolderMdl.VMs.FolderVM>()*@
+        @(Html.Kendo().Grid<CommentViewModel>().Name("Comments")
+
+        .Columns(columns =>
+        {
+        columns.Template(@<text></text>).ClientTemplate("<input type='checkbox'  class='checkbox'/>").Title("<input type='checkbox'/>")
+                                     .Width(10).Title("Select").HtmlAttributes(new
+                                     {
+                                         @onclick = "click",
+                                         style = "align:center;float:none;text-align:center; font-size:12px; vertical-align: middle;"
+                                     })
+                                         .HeaderHtmlAttributes(new { style = "overflow: visible; white-space: normal; text-align:center; " });
+            columns.Template(t => { }).Title("Row No").ClientTemplate("#= renderNumber(data) #").Hidden(true);
+            columns.Template(t => { }).Title("Number").ClientTemplate("#= renderRecordNumber(data) #");
+
+            columns.Bound(p => p.Id).Sortable(false).Visible(false);
+            columns.Bound(p => p.FolderId).Sortable(false).Visible(false);
+            columns.Bound(p => p.Code);
+            columns.Bound(p => p.Description).Width(420);
+            columns.Bound(p => p.CreateUserName).Title("Created by");
+            columns.Bound(p => p.LastUpdateUserName).Title("Last edited by");
+            columns.Bound(p => p.CreateDate).Title("Creation Date");
+            columns.Bound(p => p.LastUpdateDate).Title("Last Edit Date");
+
+            columns.Command(command =>
+            {
+
+                if (((ClaimsIdentity)User.Identity).HasClaim("Comment", "CanEditComment"))
+                    command.Edit().Text("Edit")
+                        .UpdateText("Ok")
+                        .CancelText("Cancel");
+
+                //command.Destroy().Text("Delete");
+
+            });
+            if (((ClaimsIdentity)User.Identity).HasClaim("Comment", "CanDeleteComment"))
+                columns.Command(c => c.Custom("cDelete").Text("Delete<span class='k-icon k-delete'></span>").Click("customDelete").
+                     
+                      HtmlAttributes(new
+                      {
+                          style = "background:darksalmon",
+
+                      }));
+        })
+        .ToolBar(toolbar =>
+        {
+        toolbar.Template(@<text>
+            <div class="toolbar" style="float: left">
+                 @if (((ClaimsIdentity)User.Identity).HasClaim("Comment", "CanCreateComment")){
+                <a class="k-button k-button-icontext k-grid-add" href="#">
+                    <i></i> Add New Item
+                </a>
+                 }
+                 @if (((ClaimsIdentity) User.Identity).HasClaim("Comment", "CanViewComment"))
+                 {
+                     @Html.ActionLink(" Report  ", "Index", "ReportComment",
+                    new { projectId = ViewBag.projectId }, new {@class = "k-button k-button-icontext",
+                        style = "background-color: lightsteelblue;"
+                    })
+                 }
+                      
+@if (((ClaimsIdentity)User.Identity).HasClaim("Comment", "CanDeleteComment")) {
+                <a style='margin-left: 10px; background-color: lightsteelblue;'
+                   class='k-button k-button-icontext' id="actionButton" href='#'>
+                    &nbsp; &nbsp; Delete &nbsp;&nbsp;
+                </a> }
+                <a style='margin-left: 10px;background-color: lightsteelblue;' class='k-button k-button-icontext' onclick='customCommand()' href='#'>
+                    &nbsp; &nbsp; Search &nbsp;&nbsp;
+                </a>
+                <div id="divt"> @Html.Partial("_SearchComment") </div>
+
+            </div>
+            </text>);
+        })
+     .Editable(editable =>
+          {
+              editable.Mode(GridEditMode.PopUp).TemplateName("Comment").Window(w => w.Width(550).Title(""));
+              editable.DisplayDeleteConfirmation(false);
+          })
+    .Pageable(pager => pager
+            .Messages(messages => messages.Display("{0} to {1} . Total {2}")).Messages(messages => messages.Empty("No information has been registered")))
+    .Sortable()
+            .Groupable(g => g.Messages(m => m.Empty("Select")))
+                    .Events(e =>
+{
+    e.Edit("onEdit");
+    e.DataBound("onDataBound");
+})
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(10)
+        .Events(events =>
+        {
+            events.Error("error_handler");
+            events.RequestEnd("onRequestEnd");
+
+        })
+
+ .Model(model =>
+ {
+     model.Id(p => p.Id);
+     model.Field(p => p.Id).Editable(false);
+     model.Field(p => p.CreateDate).Editable(false);
+     //model.Field(p => p.ClientCenterId).DefaultValue(ViewBag.id).Editable(false);
+
+ })
+ .Create(update => update.Action("Create", "Comment", new { projectId = ViewBag.projectId }))
+        .Read(read => read.Action("Read", "Comment", new { projectId = ViewBag.projectId }).Data("commentsReadData"))
+        .Update(update => update.Action("Edit", "Comment", new { projectId = ViewBag.projectId }))
+        .Destroy(update => update.Action("Delete", "Comment", new { projectId = ViewBag.projectId }))
+    )
+         .Events(e =>
+         {
+             e.Edit("onEdit");
+             e.DataBound("onDataBound");
+         })
+
+        )
+
+
+        <style>
+            .vis {
+                visibility: hidden;
+                display: none;
+            }
+
+            .multilinetextsize {
+                width: 300px;
+                height: 150px;
+            }
+        </style>
+
+        <script type="text/javascript">
+        function customCommand() {
+            //execute your custom logic
+            $("#divt").toggle("slow");
+
+        }
+
+        $(document).ready(function () {
+            $("#divt").toggle("9999999");
+            $("#Description").addClass("k-textbox");
+
+
+
+        });
+        var rowNumber = 0;
+
+        function renderNumber(data) {
+            return ++rowNumber;
+        }
+        function renderRecordNumber(data) {
+            var page = parseInt($("#Comments").data("kendoGrid").dataSource.page()) - 1;
+            var pagesize = $("#Comments").data("kendoGrid").dataSource.pageSize();
+            return parseInt(rowNumber + (parseInt(page) * parseInt(pagesize)));
+        }
+        function onDataBound(e) {
+            rowNumber = 0;
+            var grid = this;
+
+            grid.tbody.find("tr[role='row']").each(function () {
+                var model = grid.dataItem(this);
+                //if (!model.HasClaimEdit || model.IsUpdateLock || model.IsUpdateCommentLock) {
+                if ( model.IsUpdateCommentLockCreateUser || model.IsUpdateCommentLock) {
+                    $(this).find(".k-grid-edit").addClass("k-state-disabled");
+                    $(this).find(".k-grid-edit").remove();
+                }
+                //if (!model.HasClaimDelete || model.IsDeleteLock || model.IsDeleteCommentLock) {
+                if (model.IsDeleteCommentLockCreateUser || model.IsDeleteCommentLock) {
+                    $(this).find(".k-grid-cDelete").addClass("k-state-disabled");
+                    $(this).find(".k-grid-cDelete").remove();
+                }
+            });
+            if (ss == true) {
+                if (!e.sender.dataSource.view().length) {
+                       Lobibox.notify('info', {
+                        title: 'Search',
+                        msg: "There are no items to display",
+                        position: 'bottom left',
+                    });
+                } else {
+                    Lobibox.notify('success', {
+                        title: 'Search',
+                        msg: "Search was done successfully.",
+                        position: 'bottom left',
+                    });
+                }
+            }
+            ss = false;
+        }
+        function onEdit(e) {
+            if (!e.model.isNew()){}
+           
+            $('[name="Id"]').attr("Hidden", true);
+           
+            $("#Description").addClass("k-textbox");
+            $("#Description").addClass("multilinetextsize");
+            $("#Description").css("height", "250px");
+            $("#KeyWord").addClass("k-textbox");
+           
+            $('[name="CreateDate"]').addClass("vis");
+            $('label[for="' + $("#CreateDate").attr('id') + '"]').addClass("vis");
+            $('[name="LastUpdateDate"]').addClass("vis");
+            $('label[for="' + $("#LastUpdateDate").attr('id') + '"]').addClass("vis");
+            $('[name="CreateUserName"]').addClass("vis");
+            $('label[for="' + $("#CreateUserName").attr('id') + '"]').addClass("vis");
+            $('[name="LastUpdateUserName"]').addClass("vis");
+            $('label[for="' + $("#LastUpdateUserName").attr('id') + '"]').addClass("vis");
+            $('[name="FolderId"]').addClass("vis");
+            $('label[for="' + $("#FolderId").attr('id') + '"]').addClass("vis");
+            $('label[for="' + $("#FolderId").attr('id') + '"]').parent('div').addClass("vis");
+            var labelFolderId = $("label[for='" + $("#Code").attr('id') + "']");
+            $(labelFolderId).remove();
+
+            $('[name="Id"]').addClass("vis");
+            $('label[for="' + $("#Id").attr('id') + '"]').addClass("vis");
+            $('label[for="' + $("#Id").attr('id') + '"]').parent('div').addClass("vis");
+            
+            e.container.find(".k-grid-update").on("click", function (e) {
+                $("#SDescription").val($("#Description").val());
+            });
+        }
+        function onCancel(e) {
+            
+        };
+        </script>
+
+        <script type="text/javascript">
+        function onRequestEnd(e) {
+            if (e.type == "create" && !e.response.Errors) {
+                if (e.response == null || e.response.Errors == null) {
+                    setTimeout(function myfunction() {
+                        Lobibox.alert('success', {
+                            msg: "Ok. done successfully",
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                      
+                    }, 1000);
+                }}
+            else if (e.type == "destroy" && !e.response.Errors) {
+                if (e.response == null || e.response.Errors == null) {
+                setTimeout(function myfunction() {
+                    Lobibox.alert('success', {
+                        msg: "Delete was done successfully.",
+                        title: "successful",
+                        buttons: {
+                            ok: {
+                                text: "Ok",
+                                'class': 'btn btn-success bthwidth',
+                            }
+                        }
+                    });
+                   
+                }, 1000);}
+            }  else if (e.type == "update" && !e.response.Errors) {
+                if (e.response == null || e.response.Errors == null) {
+
+                    setTimeout(function myfunction() {
+                        Lobibox.alert('success', {
+                            msg: "Edit was done successfully.",
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                      
+                    }, 1000);
+}
+            }
+           
+        }
+
+        var Err = "";
+
+        function error_handler(e) {
+            if (e.errors) {
+                var message = "Error :\n";
+                $.each(e.errors, function(key, value) {
+                    if ('errors' in value) {
+                        $.each(value.errors, function() {
+                            message += this + "\n";
+                        });
+                    }
+                });
+                e.sender.read();
+                e.sender._destroyed = [];
+                Lobibox.alert('error', {
+                    msg: message,
+                    title: "Error!",
+                    buttons: {
+                        ok: {
+                            text: "Close",
+                            'class': 'btn btn-danger bthwidth',
+                        }
+                    }
+                });
+                $("#Comments").data("kendoGrid").dataSource.read();
+            }
+        }
+        </script>
+        <script>
+    var ss = false;
+    $("#btnSearchT").click(function (e) {
+        e.preventDefault();
+        $("#divt").toggle("slow");
+
+    });
+    $("#btnSearch").click(function (e) {
+        e.preventDefault();
+        ss = true;
+        $("#Comments").data("kendoGrid").dataSource.read();
+        $("#divt").toggle("slow");
+
+    });
+
+    function commentsReadData() {
+        return {
+          
+
+            sStartDate: $("#SStartDate").val(),
+            sEndDate: $("#SEndDate").val(),
+            sDescription: $("#SDescription").val(),
+            sCode: $("#SCode").val(),
+        };
+    }
+        </script>
+        <script type="text/javascript">
+
+            function showFiles(e) {
+                e.preventDefault();
+                var d = this.dataItem($(e.currentTarget).closest("tr"));
+                window.location.href = "@Url.Action("IndexFileP", "File")?projectId=" + d.Id;
+            }
+        </script>
+        <script type="text/javascript">
+
+            function showComments(e) {
+                e.preventDefault();
+                var d = this.dataItem($(e.currentTarget).closest("tr"));
+
+                window.location.href = "@Url.Action("IndexGroup", "PermissionGroup")?groupId=" + d.Id;
+                
+            }
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#sendPerm').click(function(e) {
+                    e.preventDefault();
+                    LoadAjaxContent('PermissionGroup/Index2?groupId=#= Id #');
+                });
+            });
+
+            $("#actionButton").click(function () {
+                var idsToSend = [];
+                var dd = "";
+                var grid = $("#Comments").data("kendoGrid");
+                var ds = grid.dataSource.view();
+                var FolderId = "";
+                for (var i = 0; i < ds.length; i++) {
+                    var row = grid.table.find("tr[data-uid='" + ds[i].uid + "']");
+                    var checkbox = $(row).find(".checkbox");
+                    if (checkbox.is(":checked")) {
+                        idsToSend.push(ds[i].Id);
+                        FolderId = ds[i].FolderId;
+                    }
+                }
+                dd = idsToSend.toString();
+                //alert(dd);
+                $.ajax({
+                    url: '@Url.Action("MultiDelete", "Comment")',
+                    type: "Post",
+                    data: { Ids: dd, FolderId: FolderId },
+                    dataType: 'json',
+                    success: function (result) {
+                        $("#Comments").data("kendoGrid").dataSource.read();
+                        if (result.IsSuccess) {
+                            Lobibox.alert('success', {
+                                msg: result.Message,
+                                title: "successful",
+                                buttons: {
+                                    ok: {
+                                        text: "Ok",
+                                        'class': 'btn btn-success bthwidth',
+                                    }
+                                }
+                            });
+                        } else {
+                            Lobibox.alert('error', {
+                                msg: result.Message,
+                                title: "Error!",
+                                buttons: {
+                                    ok: {
+                                        text: "Close",
+                                        'class': 'btn btn-danger bthwidth',
+                                    }
+                                }
+                            });
+                        }
+                       
+                    }
+                });
+                //this obviously won't work , but just to illustrate the point.          
+                $.post("/whatever", { ids: idsToSend });
+            });
+        </script>
+    </div>
+</body>
+</html>
+

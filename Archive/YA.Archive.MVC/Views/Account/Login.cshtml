@@ -1,0 +1,71 @@
+﻿@model YA.Archive.Service.UserManagementMdl.VMs.LoginVM
+@{ ViewBag.Title = "Login";}
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Archive</title>
+    <meta name="description" content="description">
+    <meta name="author" content="Evgeniya">
+    <meta name="keyword" content="keywords">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Scripts/plugins/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/SiteTheme/FontAwesome/font-awesome.css" rel="stylesheet">
+    <link href='~/Content/SiteTheme/css?family=Righteous' rel='stylesheet' type='text/css'>
+    <link href="~/Content/SiteTheme/style.css" rel="stylesheet">
+    
+    <!--[if lt IE 9]>
+            <script src="http://getbootstrap.com/docs-assets/js/html5shiv.js"></script>
+            <script src="http://getbootstrap.com/docs-assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="page-login" class="row">
+            <div class="col-xs-12 col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3" style="direction: ltr; top: 100px;">
+             
+               
+                <div class="box">
+                    <div class="box-content">
+                        <div class="text-center">
+                            <h3 class="page-header">Login</h3>
+                        </div>
+
+
+                        @*@Html.ValidationSummary()*@
+                        @using (Html.BeginForm())
+                        { <div class="text-right">
+                            <span style="color:brown">@ViewBag.MessageLogin</span>
+                        </div>
+                            @Html.AntiForgeryToken();
+                            <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+                           
+
+
+
+
+                        <div class="form-group">
+                            <label class="control-label">User Name</label>
+                            @Html.TextBoxFor(x => x.UserName, new { @class = "form-control",style="text-align:center" })
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Password</label>
+                            @Html.PasswordFor(x => x.Password, new { @class = "form-control", style = "text-align:center" })
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-primary" type="submit">&nbsp;&nbsp;&nbsp;&nbsp;ورود&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                          
+                        </div>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

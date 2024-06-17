@@ -1,0 +1,17 @@
+﻿@model YA.Archive.Service.UserManagementMdl.VMs.RegistrationVM
+
+    @{
+        Layout = null;
+    }
+
+    @(Html.Kendo().MultiSelect()
+                                  .Name("Fruits")
+                                      .DataValueField("Value")
+                                      .DataTextField("Text")
+                                   
+                                     .BindTo((System.Collections.IEnumerable)ViewBag.ggg)
+                                     .HtmlAttributes(new { data_value_primitive = "true" })
+                                     )
+
+
+    <script src="~/scripts/kendo/2016.3.914/kendo.multiselect.min.js"></script>

@@ -1,0 +1,39 @@
+﻿@using System.Web.UI.WebControls;
+@using Stimulsoft.Report.Mvc;
+@{
+    ViewBag.Title = "ReportProjectReport";
+}
+
+
+
+
+<style>
+    .stiMvcViewerReportPanel table {
+        direction: ltr !important;
+    }
+</style>
+
+@Html.Partial("_SiteMap", ViewData["ReportProjectSiteMap"])
+<div>
+
+    @Html.Stimulsoft().RenderMvcViewerScripts()
+    @Html.Stimulsoft().RenderMvcDesignerScripts()
+    @Html.Stimulsoft().StiMvcViewer("MyViewr", new StiMvcViewerOptions()
+
+{
+
+ 
+    Localization = "~/Content/Reporting/fa.xml",
+    ActionGetReportSnapshot = "ReportProjectt",
+    ActionViewerEvent = "ViewerEvent",
+    Width = Unit.Percentage(100),
+    Theme = StiTheme.Office2013,
+    ActionPrintReport = "PrintReport",
+    ActionExportReport = "ExportReport",
+ 
+    ClientRequestTimeout = 9000,
+  
+})
+</div>
+
+

@@ -1,0 +1,511 @@
+﻿@using System.Security.Claims
+@using YA.Archive.Service.FolderMdl.Messaging
+@using Kendo.Mvc.UI.Html
+@using Microsoft.AspNet.Identity
+@using File = YA.Archive.MVC2.Models.File.File
+@using Folder= YA.Archive.Service.FolderMdl.Imps.FolderService
+<script src="~/Scripts/kendo/2016.3.914/kendo.all.min.js"></script>
+@Html.Partial("_SiteMap", ViewData["FileSiteMap"])
+
+<style>
+   .k-grid-header{ padding-right: -10px;   padding-left: 18px; }
+</style>
+@(Html.Kendo().Grid<File>().Name("Files")
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Events(events =>
+          {
+              events.Error("error_handler");
+              events.RequestEnd("onRequestEnd");
+
+          })
+          .Model(model => model.Id(m => m.Id))
+          .Create(ins => ins.Action("Create", "File", new { projectId = ViewBag.projectId }).Data("filesCreateReadData"))
+          .Read(read => read.Action("Read", "File", new { projectId = ViewBag.projectId }).Data("filesReadData"))
+          .Update(up => up.Action("Update", "File", new { projectId = ViewBag.projectId }))
+          .Destroy(update => update.Action("Delete", "File"))
+          .Model(model =>
+          {
+              model.Id(p => p.Id);
+              model.Field(p => p.Id).Editable(false);
+
+
+          })
+      )
+      
+      .Columns(columns =>
+      {
+          columns.Template(@<text></text>).ClientTemplate("<input type='checkbox'  class='checkbox'/>").Title("<input type='checkbox'/>")
+                                     .Width(20).Title("").HtmlAttributes(new
+                                     {
+                                         @onclick = "click",
+                                         style = "align:center;float:none;text-align:center; font-size:12px; vertical-align: middle;"
+                                     })
+                                         .HeaderHtmlAttributes(new { style =
+                                         "overflow: visible; white-space: normal; text-align:center; " });
+          columns.Template(t => { }).Title("Row No").ClientTemplate("#= renderNumber(data) #").Hidden(true);
+          columns.Template(t => { }).Title("").ClientTemplate("#= renderRecordNumber(data) #")
+        .HtmlAttributes(new
+        {
+            style = "margin-left:0px; width:5px; "})
+            .HeaderHtmlAttributes(new
+            {
+                style = "margin-left:10px;padding-left:10px; width:0px; "
+            });
+
+          columns.Bound(c => c.Id).Hidden();
+          columns.Bound(c => c.Code).Width(50);
+          columns.Bound(c => c.OrginalName);
+          columns.Bound(c => c.Description);
+          
+          columns.Bound(p => p.KeyWorddd);
+            columns.Bound(p => p.TypeofFiles).ClientTemplate("#= renderMultiSelectText(data.TypeofFiles) #")
+              .EditorTemplateName("TypeOfFileEditor");
+          columns.Bound(p => p.CreateDate);
+          columns.Bound(p => p.LastUpdateDate);
+          columns.Bound(p => p.CreateUserName);
+          columns.Bound(p => p.LastUpdateUserName);
+          columns.Bound(p => p.FileSize);
+
+          columns.Command(command => command.Custom("download").Text("Download").Click("showComments")).Title("Download");
+
+
+          columns.Command(command =>
+          {
+
+              if (((ClaimsIdentity)User.Identity).HasClaim("File", "CanEditFile"))
+                  
+
+                  command.Edit().Text("Edit")
+                      .UpdateText("Ok")
+                      .CancelText("Cancel");
+
+
+            
+          });
+          if (((ClaimsIdentity)User.Identity).HasClaim("File", "CanDeleteFile"))
+              columns.Command(c => c.Custom("cDelete").Text("Delete<span class='k-icon k-delete'></span>").Click("customDelete").
+                       
+                        HtmlAttributes(new
+                        {
+                            style = "background:darksalmon",
+
+                        }));
+      })
+       .Scrollable(s=>s.Enabled(true).Height("auto"))
+
+
+
+ .ToolBar(toolbar =>
+ {
+ toolbar.Template(@<text>
+                         <div class="toolbar" style="float: right">
+                            @if (((ClaimsIdentity) User.Identity).HasClaim("File", "CanCreateFile"))
+                            {
+                                <a class="k-button k-button-icontext k-grid-add" href="#">
+                                    <i></i> Add New Attachment
+                                </a>
+                            } @if (((ClaimsIdentity)User.Identity).HasClaim("File", "CanViewFile"))
+                            {
+                             @Html.ActionLink(" Report  ", "Index", "ReportFile", new { projectId = ViewBag.projectId }, new
+                        {
+                            @class = "k-button k-button-icontext",
+                            style= "background-color: lightsteelblue;"
+                        })
+
+
+                            }
+                             @if (((ClaimsIdentity)User.Identity).HasClaim("File", "CanDeleteFile")){
+                             <a style='margin-left: 10px; background-color: lightsteelblue;'
+                                class='k-button k-button-icontext' id="actionButton" href='#'>
+                                 &nbsp; &nbsp; Delete &nbsp;&nbsp;
+                             </a>}
+                             <a style='margin-left: 10px;background-color: lightsteelblue;'class='k-button k-button-icontext' onclick='customCommand()' href='#'
+                               >
+                                 &nbsp; &nbsp; Search &nbsp;&nbsp;
+                              </a>
+                             <div id="divt"> @Html.Partial("_SearchFile2") </div>
+                             <div> @Html.Partial("_ProjectInfo") </div>
+                         </div>
+    </text>);
+ })
+
+
+
+.Events(e =>
+{
+    e.Edit("onEdit");
+    e.DataBound("onDataBound");
+})
+
+     .Pageable(pager => pager
+              .Messages(messages => messages.Display("{0} to {1} . Total {2}")).Messages(messages => messages.Empty("No information has been registered")))
+
+    .Sortable()
+    .Editable(editable =>
+    {
+        editable.Mode(GridEditMode.PopUp).TemplateName("File").Window(w => w.Width(750).Title(""));
+        editable.DisplayDeleteConfirmation(false);
+    })
+    )
+   
+
+
+        <script>
+
+    function customCommand() {
+        //execute your custom logic
+        $("#divt").toggle("slow");
+    }
+    function reportFile() {
+        //$("#del1").click(function (e) {
+        //e.preventDefault();
+            $.ajax({
+                url: "/ReportFile/Index",
+                //data: $("#fileupload").serialize(),
+                data: { sFileName: $("#SFileName").val(), },//"{%=file.name%}"},
+                type: "Post",
+                dataType: "Json"
+
+            });
+        //});
+    }
+    $(document).ready(function () {
+        $("#divt").toggle("9999999");
+    });
+    var rowNumber = 0;
+
+    function renderNumber(data) {
+        return ++rowNumber;
+    }
+
+    function renderRecordNumber(data) {
+        var page = parseInt($("#Files").data("kendoGrid").dataSource.page()) - 1;
+        var pagesize = $("#Files").data("kendoGrid").dataSource.pageSize();
+        return parseInt(rowNumber + (parseInt(page) * parseInt(pagesize)));
+    }
+
+    function onDataBound(e) {
+        rowNumber = 0;
+        var grid = this;
+       
+        grid.tbody.find("tr[role='row']").each(function () {
+            var model = grid.dataItem(this);
+          
+            if (model.IsUpdateFileLock || model.IsUpdateFileLockCreateUser) {
+                $(this).find(".k-grid-edit").addClass("k-state-disabled");
+                $(this).find(".k-grid-edit").remove();
+            }
+            if (model.IsDeleteFileLock || model.IsDeleteFileLockCreateUser) {
+                $(this).find(".k-grid-cDelete").addClass("k-state-disabled");
+                $(this).find(".k-grid-cDelete").remove();
+            }
+        });
+       
+        if (ss == true) {
+            if (!e.sender.dataSource.view().length) {
+                 Lobibox.notify('info', {
+                    title: 'Search',
+                    msg: "There are no items to display",
+                    position: 'bottom left',
+
+                });
+            } else {
+                Lobibox.notify('success', {
+                    title: 'Search',
+                    msg: "Search was done successfully.",
+                    position: 'bottom left',
+                });
+            }
+        }
+        ss = false;
+    }
+    function onEdit(e) {
+       
+        if (e.model.isNew()) {
+            e.container.find(".k-grid-cancel").remove(); 
+            $('table tr:gt(' + 1 + ')').each(function() {
+                $(this).remove();
+            });
+            $("#grid tbody [data-role=dropdownlist]").each(function() {
+                var ddl = $(this).data("kendoDropDownList");
+                if (ddl) {
+                    ddl.options.optionLabel = "Select";
+                    ddl.refresh();
+                    ddl.value("");
+                }
+            });
+        } else {
+            
+            $("#divinsert").prop('hidden', false);
+            $("#divinsert").remove();
+        }
+        if ($("#ProjName").val() != "") {
+
+            $("#ClientCenterId").val($("#ProjClientId").val());
+            $("#FolderId").val($("#ProjId").val()); 
+            $("#FolderHiddenId").val($("#ProjId").val());
+      
+            $("#divClientProj").prop('hidden', true);
+
+        } else {
+            $("#divClientProj").prop('hidden', false);
+        }
+        $("#SName").val($("#Name").val());
+        $("#SStartDate").val("");
+        $("#SEndDate").val("");
+        $("#SClientCenterId").val("");
+        $("#STypeofFolders").val("");
+        $("#SKeyWords").val("");
+        $("#SCode").val("");
+        e.container.find(".k-grid-update").on("click", function (e) {
+            $("#SName").val($("#Name").val());
+            $("#SStartDate").val("");
+            $("#SEndDate").val("");
+            $("#SClientCenterId").val("");
+            $("#STypeofFolders").val("");
+            $("#SKeyWords").val("");
+            $("#SCode").val("");
+        });
+        $("#SFileName").val($("#FileName").val());
+        $("#SProjName").val($("#ProjName").val());
+        $("#SProjCode").val($("#ProjCode").val());
+        e.container.find(".k-grid-update").on("click", function (e) {
+            $("#SFileName").val($("#FileName").val());
+            $("#SProjName").val($("#ProjName").val());
+            $("#SProjCode").val($("#ProjCode").val());
+        });
+        if ($("#ProjName").val() != "") {
+           
+            $("#ClientCenterId").val($("#ProjClientId").val());
+            $("#FolderId").val($("#ProjId").val());
+         
+
+        } else {
+            $("#divClientProj").prop('hidden', false);
+        }
+        
+        e.container.find(".k-grid-cancel").bind("click", function() {
+            $("#Files").data("kendoGrid").dataSource.read();
+        });
+    }
+
+
+
+    function renderMultiSelectText(selectListArray) {
+        if (selectListArray != undefined && selectListArray[0] != undefined) {
+
+            var displayText;
+            $.each(selectListArray, function(index) {
+                if (displayText == undefined)
+                    displayText = selectListArray[index].Name + " ,";
+                else
+                    displayText = displayText + selectListArray[index].Name + " ,";
+            });
+            return displayText.slice(0, -2);
+        } else
+            return "";
+    }
+        </script>
+        <script>
+    var ss = false;
+    $("#btnSearchT").click(function (e) {
+        e.preventDefault();
+        $("#divt").toggle("slow");
+
+    });
+    $("#btnSearch").click(function (e) {
+        e.preventDefault();
+       
+        $("#Files").data("kendoGrid").dataSource.read();
+        $("#divt").toggle("slow");
+
+    });
+
+    function filesReadData() {
+        return {
+           
+            sStartDate: $("#SStartDate").val(),
+            sEndDate: $("#SEndDate").val(),
+            sFileName: $("#SFileName").val(),
+            
+            sTypeofFiles: $("#STypeofFiles").val(),
+            sKeyWords: $("#SKeyWords").val(),
+            sCode: $("#SCode").val(),
+        
+        };
+    }
+    function filesCreateReadData() {
+        return {
+        
+            FolderHidId: $("#ProjId").val(),
+        };
+    }
+        </script>
+        <script type="text/javascript">
+            function onRequestEnd(e) {
+                if ($("#ProjName").val() != "") {
+
+                    $("#ClientCenterId").val($("#ProjClientId").val());
+                    $("#FolderId").val($("#ProjId").val());
+                  
+
+                } else {
+                    $("#divClientProj").prop('hidden', false);
+                }
+       
+            if (e.type == "create" && !e.response.Errors) {
+                if (e.response == null || e.response.Errors == null) {
+                
+                    $("#Files").data("kendoGrid").dataSource.read();
+                    
+                }
+           }
+        
+            else if (e.type == "destroy" && !e.response.Errors) {
+                if (e.response == null || e.response.Errors == null) {
+                    setTimeout(function myfunction() {
+                        Lobibox.alert('success', {
+                            msg: "Delete was done successfully.",
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                       
+                    }, 1000);
+                } $("#SProjName").val("");
+                $("#SProjCode").val("");
+            }
+        else if (e.type == "update" && !e.response.Errors) {
+            if (e.response == null || e.response.Errors == null) {
+      
+                setTimeout(function myfunction() {
+                    Lobibox.alert('success', {
+                        msg: "Edit was done successfully.",
+                        title: "successful",
+                        buttons: {
+                            ok: {
+                                text: "Ok",
+                                'class': 'btn btn-success bthwidth',
+                            }
+                        }
+                    });
+                   
+                }, 1000);
+            }
+        }
+        else if (e.type == "cancel" && !e.response.Errors) {
+            if (e.response == null || e.response.Errors == null) {
+
+                
+            }
+        }
+           
+   }
+
+    var Err="";
+    var t = false;
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Error :\n";
+            $.each(e.errors, function(key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                    });
+                }
+            });
+            //alert(message);
+            e.sender.read();
+            e.sender._destroyed = [];
+            Lobibox.alert('error', {
+                msg: message,
+                title: "Error!",
+                buttons: {
+                    ok: {
+                        text: "Close",
+                        'class': 'btn btn-danger bthwidth',
+                    }
+                }
+            });
+            $("#Files").data("kendoGrid").dataSource.read();
+        }
+    }
+        </script>
+        <script type="text/javascript">
+
+    function showComments(e) {
+        e.preventDefault();
+        var d = this.dataItem($(e.currentTarget).closest("tr"));
+
+        window.location.href = "@Url.Action("Download", "File")?fileId=" + d.Id;
+       
+    }
+
+           
+            function bbb(selectId) {
+                return selectId;
+            }
+        </script>
+<script>
+        function editVisible(dataItem) {
+        // hide the Edit button for the item with ProductID=1
+        return dataItem.Id != 1;
+        }
+
+        $("#actionButton").click(function () {
+            var idsToSend = [];
+            var dd = "";
+            var grid = $("#Files").data("kendoGrid");
+            var ds = grid.dataSource.view();
+
+            for (var i = 0; i < ds.length; i++) {
+                var row = grid.table.find("tr[data-uid='" + ds[i].uid + "']");
+                var checkbox = $(row).find(".checkbox");
+                if (checkbox.is(":checked")) {
+                    idsToSend.push(ds[i].Id);
+
+                }
+            }
+            dd = idsToSend.toString();
+            //alert(dd);
+            $.ajax({
+                url: '@Url.Action("MultiDelete", "File")',
+                type: "Post",
+                data: { Ids: dd },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        Lobibox.alert('success', {
+                            msg: result.Message,
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                    } else {
+                        Lobibox.alert('error', {
+                            msg: result.Message,
+                            title: "Error!",
+                            buttons: {
+                                ok: {
+                                    text: "Close",
+                                    'class': 'btn btn-danger bthwidth',
+                                }
+                            }
+                        });
+                    }
+                    $("#Files").data("kendoGrid").dataSource.read();
+                }
+            });
+            //this obviously won't work , but just to illustrate the point.          
+            $.post("/whatever", { ids: idsToSend });
+        });
+</script>

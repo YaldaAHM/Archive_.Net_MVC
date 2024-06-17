@@ -1,0 +1,547 @@
+﻿@using System.Security.Claims
+@using YA.Archive.Infrastructure.Infrastructure.Permission
+<!DOCTYPE html>
+<style>
+
+
+    .dn-menup {
+        font-size: 12px;
+        text-align: left;
+        direction: ltr;
+        color: white;
+
+
+    }
+    .dn-menu {font-size: 12px;
+        direction: ltr;
+        color: white;
+        height: 40px;
+        text-align: left;
+
+    }
+    .ajax-link {font-size: 12px;
+        color: white;
+        padding: 10px 15px;
+    }
+    .spmenu {
+        padding-top: 10px;
+        /*color: white;*/
+    }
+    .nav.main-menu > div > a {
+        color: white;
+        font-size: 12px;
+        direction: ltr;
+        color: #f0f0f0;
+        text-align: left;
+        min-height: 40px;
+        -webkit-transition: 0.2s;
+        -moz-transition: 0.2s;
+        -o-transition: 0.2s;
+        transition: 0.2s;
+        text-decoration: none;
+    }
+
+    .nav > div > a {
+        color: white;
+        font-size: 12px;
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+    }
+    .nav.main-menu > div > a, .nav.msg-menu > div > a {
+        /*text-align: center;*/
+        color: #f0f0f0;
+        min-height: 40px;
+        -webkit-transition: 0.2s;
+        -moz-transition: 0.2s;
+        -o-transition: 0.2s;
+        transition: 0.2s;
+    }
+     .dn-menu > a:hover {
+        /*text-align: center;*/
+        color:peru;
+
+     }
+    .divContentP {
+        
+        direction: ltr;
+        
+        text-align: left;
+        float: left;
+        left:0;
+
+        text-decoration: none;
+    }
+
+
+
+</style>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Archive</title>
+    <meta name="description" content="description">
+    <meta name="author" content="DevOOPS">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    @* popup *@
+    <link href="~/Content/lobibox-master/css/lobibox.css" rel="stylesheet" />
+    <link href="~/Content/lobibox-master/dist/css/lobibox.min.css" rel="stylesheet" />
+    <link href="~/Content/lobibox-master/demo/demo.css" rel="stylesheet" />
+
+    <style>
+        .lobibox-notify .lobibox-close {
+            direction: ltr;
+            float: right;
+            left: 20px;
+        }
+    </style>
+
+
+
+    <link href="~/Scripts/plugins/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="~/Scripts/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet">
+     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Content/SiteTheme/FontAwesome/font-awesome.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
+    <link href='~/Content/SiteTheme/css?family=Righteous' rel='stylesheet' type='text/css'>
+    <link href='~/Content/SiteTheme/css.css' rel='stylesheet' type='text/css'>
+   
+    <link href="~/Scripts/plugins/select2/select2.css" rel="stylesheet">
+
+
+
+
+
+    <link href="~/Content/SiteTheme/style.css" rel="stylesheet">
+   
+    <link href="@Url.Content("~/Content/kendo/2016.3.914/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2016.3.914/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2016.3.914/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2016.3.914/kendo.default.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2016.3.914/kendo.dataviz.default.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2016.3.914/kendo.rtl.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/kendo/2016.3.914/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2016.3.914/jszip.min.js")"></script>
+    @*<script src="https://kendo.cdn.telerik.com/2016.3.914/js/kendo.all.min.js"></script>*@
+    <script src="@Url.Content("~/Scripts/kendo/2016.3.914/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2016.3.914/kendo.aspnetmvc.min.js")"></script>
+
+
+    <script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/cultures/kendo.culture.fa-IR.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/messages/kendo.messages.fa-IR.js")"></script>
+    <script>
+        kendo.culture("fa-IR");
+    </script>
+    <style>
+        .k-list {
+            /*overflow-style: marquee;*/
+            overflow-y: scroll !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+    </style>
+
+
+    <link href="~/Content/SiteTheme/telerikstyle.css" rel="stylesheet"/>
+
+
+    <script src="~/Scripts/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="~/Scripts/plugins/bootstrap/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/plugins/select2/select2.js"></script>
+    <script src="~/Scripts/plugins/select2/select2.min.js"></script>
+ 
+    <script src="~/Scripts/plugins/bootstrapvalidator/bootstrapvalidator.js"></script>
+    <script src="~/Scripts/plugins/bootstrapvalidator/bootstrapvalidator.min.js"></script>
+
+    <!-- All functions for this theme + document.ready processing -->
+    <script src="~/Scripts/SiteTemplate/SiteTheme.js">
+    </script>
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="http://getbootstrap.com/docs-assets/js/html5shiv.js"></script>
+            <script src="http://getbootstrap.com/docs-assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <!--Start Header-->
+    <div id="screensaver">
+        <canvas id="canvas"></canvas>
+        <i class="fa fa-lock" id="screen_unlock"></i>
+    </div>
+    <div id="modalbox" dir="ltr">
+        <div class="devoops-modal">
+            <div class="devoops-modal-header">
+                <div class="modal-header-name">
+                    <span>     </span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="devoops-modal-inner">
+            </div>
+            <div class="devoops-modal-bottom">
+            </div>
+        </div>
+    </div>
+
+    <header class="navbar">
+        <div class="container-fluid expanded-panel">
+            <div class="row">
+                <div id="logo" class="col-xs-12 col-sm-2">
+                    <a href="#">Archive</a>
+                </div>
+
+                <div id="top-panel" class="col-xs-12 col-sm-10">
+                    @*<div class="row">*@
+
+
+
+                        @*<div class="col-xs-4 col-sm-8 top-panel-right" dir="ltr">*@
+                            <ul class="nav navbar-nav  panel-menu pull-right" dir="ltr">
+                                <li class="dropdown" dir="ltr">
+                                    <a href="#" class="dropdown-toggle account" data-toggle="dropdown">
+                                        <div class="avatar">
+                                            <img src="~/Content/SiteTheme/img/Users-Name-icon48.png" class="img-rounded" alt="avatar" />
+                                        </div>
+                                        <i class="fa fa-angle-down pull-right"></i>
+                                        <div class="user-mini pull-right">
+                                            <span class="welcome">Welcome</span>
+
+
+                                            <span class="welcome" style="padding-top: 5px">@Html.Partial("_LoginPartial")</span>
+                                        </div>
+                                    </a>
+                                    <ul class="dropdown-menu ">
+                                        <li>
+                                            <a class="pull-left" href="/ChangePassword/Index">
+                                                <i class="fa fa-user"></i>
+                                                <span class="hidden-sm text ">Change Password</span>
+
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a class="pull-left" href="/Account/Logout">
+                                                <i class="fa fa-power-off"></i>
+                                                <span class="hidden-sm text">Log out</span>
+
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+
+                            </ul>
+                        @*</div>*@
+
+
+
+                    @*</div>*@
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </header>
+
+    <!--End Header-->
+    <!--Start Container-->
+    <div id="main" class="container-fluid">
+        <div class="row">
+            <div id="sidebar-left" class="col-xs-2 col-sm-2">
+
+                <div class="nav main-menu" style="font-size: 12px">
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">
+
+                            <span class="hidden-xs"></span>
+                        </a>
+                        <ul class="dropdown-menu-left">
+                        </ul>
+                    </li>
+                    @if (((ClaimsIdentity)User.Identity).HasClaim("TypeOfFolder", "CanViewTypeOfFolder"))
+                    {
+                        <div class="dn-menup" style="font-size: 12px;">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span class="hidden-xs">Basic Information</span>
+                            </a>
+
+                            <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px;">
+                                @Html.ActionLink("Type Of Folders", "Index", "TypeOfFolder", null, new { @class = "ajax-link" })
+                            </div>
+                            <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px;">
+                                @Html.ActionLink("Attachment Type", "Index", "TypeOfFile", null, new { @class = "ajax-link", id = "ppp" })
+                            </div>
+                            @if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                            || User.IsInRole(RolesT.MainCenter)))
+                            {
+                                <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px;">
+                                    @Html.ActionLink("Client Center", "Index", "ClientCenterA", null, new { @class = "ajax-link" })
+                                </div> }
+                            @*</ul>*@
+                        </div>
+                    }
+                    @if (((ClaimsIdentity)User.Identity).HasClaim("Project", "CanViewProject"))
+                    {
+                        <div class="dn-menup" style="font-size: 12px;">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="fa fa-table"></i>
+                                <span class="hidden-xs">Document Management</span>
+                            </a>
+                            <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px;">
+
+                                @Html.ActionLink("Document Management ", "Index", "Project", null, new { @class = "ajax-link" })
+                            </div>
+                        </div>
+                    }
+                    @if (((ClaimsIdentity)User.Identity).HasClaim("File", "CanViewFile"))
+                    {
+                        <div class="dn-menup" style="font-size: 12px;">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="fa fa-table"></i>
+                                <span class="hidden-xs">Attachment Management</span>
+                            </a>
+                            <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px;">
+
+                                @Html.ActionLink(" Attachment", "Index", "FileProject", null, new { @class = "ajax-link" })
+                            </div>
+                        </div>
+                    }
+                    @if (((ClaimsIdentity)User.Identity).HasClaim("Comment", "CanViewComment"))
+                    {
+                        <div class="dn-menup">
+                            <a href="#" class="dropdown-toggle spmenu">
+                                <i class="fa fa-table"></i>
+                                <span class="hidden-xs ">Comments Management</span>
+                            </a>
+                            <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px">
+
+                                @Html.ActionLink("Comments Management", "Index", "CommentProject",
+                       null, new { @class = "ajax-link" })
+
+
+                            </div>
+                        </div>
+                    }
+                    @if (((ClaimsIdentity)User.Identity).HasClaim("Group", "CanViewGroup") ||
+((ClaimsIdentity)User.Identity).HasClaim("User", "CanViewUser"))
+                    {
+                        <div class="dn-menup">
+                            <a href="#" class="dropdown-toggle spmenu">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span class="hidden-xs">Management of Groups and Users</span>
+                            </a> @if (((ClaimsIdentity)User.Identity).HasClaim("Group", "CanViewGroup"))
+                            {<div class="dropdown-menu-left dn-menu" style="font-size: 12px;padding-top: 10px">
+
+
+                                    @Html.ActionLink("Group Management", "Index", "Group", null, new { @class = "ajax-link" })
+
+
+                                </div>}@if (((ClaimsIdentity)User.Identity).HasClaim("User", "CanViewUser"))
+                            {<div class="dropdown-menu-left dn-menu" style="font-size: 12px;padding-top: 10px">
+
+
+
+                                    @Html.ActionLink("Users Management", "Index", "Users", null, new { @class = "ajax-link" })
+
+
+                                </div>}
+                            </div>
+                        }
+                    @if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                                    ))
+                    {
+
+                        <div class="dn-menup" style="font-size: 12px; color: white;">
+                            <a href="#" class="dropdown-toggle spmenu">
+                                <i class="fa fa-pencil-square-o"></i>
+                                <span class="hidden-xs" style="font-size: 12px;"> Folders Management  </span>
+                            </a>
+                            <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px;">
+
+                                @Html.ActionLink("Paths Management ", "Index",
+                               "Directory", null, new
+                                    {
+                                        @class = "ajax-link",
+                                   style = "font-size: 12px; padding-top: 10px;"
+                                    })
+
+                            </div>
+                        </div>
+
+                    }
+                    @if (((ClaimsIdentity)User.Identity).HasClaim("User", "CanViewUser"))
+
+                    {
+                        <div class="dn-menup" style="font-size: 12px">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="fa fa-table"></i>
+                                <span class="hidden-xs">Report Users </span>
+                            </a>
+                            <div class="dropdown-menu-left dn-menu" style="font-size: 12px; padding-top: 10px;">
+
+                                @Html.ActionLink("Users Activity Report", "Index", "UserLogTimeU", null, new { @class = "ajax-link" })
+
+
+                            </div>
+                        </div>
+                    }
+                    @if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                                                        ))
+                    {
+                        <div class="dn-menup" style="font-size: 12px;">
+                            <a href="#" class="dropdown-toggle">
+                                <i class="fa fa-desktop"></i>
+                                <span class="hidden-xs"> TitleReport </span>
+                            </a>
+                            <div class="dn-menu dropdown-menu-left" style="font-size: 12px; padding-top: 10px;">
+
+                                @Html.ActionLink("TitleReport", "Update", "ReportTitles", null, new { @class = "ajax-link" })
+
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div id="content" class="col-xs-12 col-sm-10">
+
+                <div id="ajax-content">
+
+                    @RenderBody()
+
+
+
+
+
+
+
+                </div>
+                <!--End Content-->
+            </div>
+
+            <!--Start Content-->
+
+        </div>
+    </div>
+    @Html.Partial("_DeleteConfirm")
+    
+    <script>
+
+        $(".dn-menup").click(function () {
+           
+            var parents = $(this).parents('div');
+            var child = $(this).find('div');
+            var li = $(this).closest('li.dropdown');
+            var another_items = $('.main-menu div div').not(child);
+            $(another_items).slideUp();
+           
+            $(this).find('.dn-menu').toggle('slow');
+           
+
+
+        });
+        $(document).ready(function () {
+
+            $(".dn-menu").slideUp('fast');
+
+            //  $(window).load(function () {
+            var y = window.location.toString();
+          
+            var position1 = y.indexOf('/', y.indexOf('//') + 2);
+            var yy1 = y.substring(position1);
+
+           
+            var position = yy1.indexOf('/', yy1.indexOf('/') + 1);
+          
+            var yyyy = yy1.substring(0, position);
+
+            $("[href*='" + yyyy + "']").each(function () {
+
+                var parents = $(this).parent('div');
+                $(parents).addClass('active-parent');
+                $(parents).slideDown();
+                var parent2 = parents.parent('div');
+                //$(this).addClass('active-parent');
+                $(parent2).addClass('active-parent');
+                $(parent2).css("background-color", "steelblue");
+            });
+            if (yyyy == "File") {
+                $("[href*='" + "ProjectFile" + "']").each(function () {
+                    var parents = $(this).parent('div');
+                    $(parents).addClass('active-parent');
+                    $(parents).slideUp();
+                    var parent2 = parents.parent('div');
+                    //$(this).addClass('active-parent');
+                    $(parent2).addClass('active-parent');
+                    $(parent2).css("background-color", "steelblue");
+                });
+            };
+            if (yyyy == "Comment") {
+                $("[href*='" + "ProjectComment" + "']").each(function () {
+                    var parents = $(this).parent('div');
+                    $(parents).addClass('active-parent');
+                    $(parents).slideUp();
+                    var parent2 = parents.parent('div');
+                    //$(this).addClass('active-parent');
+                    $(parent2).addClass('active-parent');
+                    $(parent2).css("background-color", "steelblue");
+                });
+            };
+
+            if (yyyy == "/Permission") {
+                $("[href*='" + "Users" + "']").each(function () {
+                    var parents = $(this).parent('div');
+                    $(parents).addClass('active-parent');
+                    $(parents).slideDown();
+                    var parent2 = parents.parent('div');
+                    //$(this).addClass('active-parent');
+                    $(parent2).addClass('active-parent');
+                    $(parent2).css("background-color", "steelblue");
+                });
+            };
+            if (yyyy == "/PermissionGroup") {
+                $("[href*='" + "Group" + "']").each(function () {
+                    var parents = $(this).parent('div');
+                    $(parents).addClass('active-parent');
+                    $(parents).slideDown();
+                    var parent2 = parents.parent('div');
+                    //$(this).addClass('active-parent');
+                    $(parent2).addClass('active-parent');
+                    $(parent2).css("background-color", "steelblue");
+                });
+            };
+          
+        });
+
+    </script>
+    @* popup *@
+
+    <script src="~/scripts/kendo/DeleteConfirmation.js"></script>
+    <script src="~/Content/lobibox-master/js/lobibox.js"></script>
+    <script src="~/Content/lobibox-master/demo/demo.js"></script>
+ 
+    <script>
+       
+        window.onload = window.history.forward(0);
+       
+    </script>
+</body>
+</html>

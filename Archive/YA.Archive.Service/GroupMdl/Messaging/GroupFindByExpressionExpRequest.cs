@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using YA.Archive.Service.GroupMdl.VMs;
+using YA.Infrastructure.Service;
+
+namespace YA.Archive.Service.GroupMdl.Messaging
+{
+    public class GroupFindByExpressionExpRequest: BaseExpressionRequest<Expression<Func<GroupExpVM, bool>>>
+    {
+        public string RequsetCurrentUserId { get; set; }
+        public int RequsetCurrentClientCenterId { get; set; }
+    }
+
+}

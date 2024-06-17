@@ -1,0 +1,16 @@
+﻿@model IEnumerable<YA.Archive.MVC2.Models.SiteRouting>
+<div class="row">
+    <div id="breadcrumb" class="col-xs-12">
+        <ol class="breadcrumb">
+                        @foreach (var item in Model)
+            {
+
+                            
+                            <li><a href=@item.Url>@item.Subject</a></li>
+                  
+                    }
+
+        </ol>
+    </div>
+</div>
+<br/>

@@ -1,0 +1,552 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="1">
+      <ReportMealR Ref="2" type="Stimulsoft.Report.Dictionary.StiBusinessObject" isKey="true">
+        <Alias>ReportMealR</Alias>
+        <BusinessObjects isList="true" count="1">
+          <ReportSubClientMealR Ref="3" type="Stimulsoft.Report.Dictionary.StiBusinessObject" isKey="true">
+            <Alias>ReportSubClientMealR</Alias>
+            <BusinessObjects isList="true" count="1">
+              <ReportSubRMealR Ref="4" type="Stimulsoft.Report.Dictionary.StiBusinessObject" isKey="true">
+                <Alias>ReportSubRMealR</Alias>
+                <BusinessObjects isList="true" count="0" />
+                <Category />
+                <Columns isList="true" count="12">
+                  <value>FoodId,System.Int32</value>
+                  <value>FoodName,System.String</value>
+                  <value>TypeOfFoodId,System.Int32</value>
+                  <value>TypeOfFoodName,System.String</value>
+                  <value>MealId,System.Int32</value>
+                  <value>MealName,System.String</value>
+                  <value>SubClientId,System.Int32</value>
+                  <value>SubClientName,System.String</value>
+                  <value>ClientId,System.Int32</value>
+                  <value>ClientName,System.String</value>
+                  <value>Count,System.Int32</value>
+                  <value>Date,System.String</value>
+                </Columns>
+                <Dictionary isRef="1" />
+                <Guid>567f6931b7324b6d8cc1d010a158e940</Guid>
+                <Name>ReportSubRMealR</Name>
+              </ReportSubRMealR>
+            </BusinessObjects>
+            <Category />
+            <Columns isList="true" count="2">
+              <value>SubClientId,System.Int32</value>
+              <value>SubClientName,System.String</value>
+            </Columns>
+            <Dictionary isRef="1" />
+            <Guid>5f452c08278e45259913d318c8f1e2b8</Guid>
+            <Name>ReportSubClientMealR</Name>
+          </ReportSubClientMealR>
+        </BusinessObjects>
+        <Category>ReportMealR</Category>
+        <Columns isList="true" count="5">
+          <value>ClientId,System.Int32</value>
+          <value>ClientName,System.String</value>
+          <value>FiscalYearName,System.String</value>
+          <value>FiscalYearId,System.Int32</value>
+          <value>TodayDate,System.String</value>
+        </Columns>
+        <Dictionary isRef="1" />
+        <Guid>03c4d443e7524e74ac8d619ed64bb723</Guid>
+        <Name>ReportMealR</Name>
+      </ReportMealR>
+    </BusinessObjects>
+    <Databases isList="true" count="0" />
+    <DataSources isList="true" count="0" />
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Variables isList="true" count="0" />
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="5" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="5">
+        <PageFooterBand1 Ref="6" type="PageFooterBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,9.32,7.72,0.9</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text11 Ref="7" type="Text" isKey="true">
+              <Border>All;Transparent;1;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.1,0.08,1.7,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,14</Font>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text11</Name>
+              <Page isRef="5" />
+              <Parent isRef="6" />
+              <Text>{PageNumber}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text11>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>PageFooterBand1</Name>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+        </PageFooterBand1>
+        <ReportTitleBand1 Ref="8" type="ReportTitleBand" isKey="true">
+          <Brush>[199:210:224]</Brush>
+          <ClientRectangle>0,0.2,7.72,0.3</ClientRectangle>
+          <Components isList="true" count="3">
+            <Text12 Ref="9" type="Text" isKey="true">
+              <Brush>[199:210:224]</Brush>
+              <ClientRectangle>1.7,0,4.7,0.3</ClientRectangle>
+              <ComponentStyle>Style2</ComponentStyle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Regular,Point,False,178</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text12</Name>
+              <Page isRef="5" />
+              <Parent isRef="8" />
+              <Text>گزارش وعده غذایی</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text12>
+            <Text7 Ref="10" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.1,0.1,0.6,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text7</Name>
+              <Page isRef="5" />
+              <Parent isRef="8" />
+              <Text>:تاریخ</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text7>
+            <Text8 Ref="11" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0,0.1,1.1,0.2</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12</Font>
+              <HorAlignment>Center</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text8</Name>
+              <Page isRef="5" />
+              <Parent isRef="8" />
+              <Text>{ReportMealR.TodayDate}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text8>
+          </Components>
+          <ComponentStyle>Style2</ComponentStyle>
+          <Conditions isList="true" count="0" />
+          <Name>ReportTitleBand1</Name>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+        </ReportTitleBand1>
+        <DataBand1 Ref="12" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid>03c4d443e7524e74ac8d619ed64bb723</BusinessObjectGuid>
+          <ClientRectangle>0,0.9,7.72,0.5</ClientRectangle>
+          <Components isList="true" count="4">
+            <Text1 Ref="13" type="Text" isKey="true">
+              <Brush>[237:227:249]</Brush>
+              <ClientRectangle>6.7,0.1,1,0.2</ClientRectangle>
+              <ComponentStyle>Style4</ComponentStyle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Regular,Point,False,178</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,10,0,0</Margins>
+              <Name>Text1</Name>
+              <Page isRef="5" />
+              <Parent isRef="12" />
+              <Text>:Center Name</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text1>
+            <Text2 Ref="14" type="Text" isKey="true">
+              <Brush>[237:227:249]</Brush>
+              <ClientRectangle>4.5,0.1,2.2,0.2</ClientRectangle>
+              <ComponentStyle>Style4</ComponentStyle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Regular,Point,False,178</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text2</Name>
+              <Page isRef="5" />
+              <Parent isRef="12" />
+              <Text>{ReportMealR.ClientName}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text5 Ref="15" type="Text" isKey="true">
+              <Brush>[237:227:249]</Brush>
+              <ClientRectangle>3.7,0.1,0.8,0.2</ClientRectangle>
+              <ComponentStyle>Style4</ComponentStyle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Regular,Point,False,178</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,10,0,0</Margins>
+              <Name>Text5</Name>
+              <Page isRef="5" />
+              <Parent isRef="12" />
+              <Text>:سال مالی</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text5>
+            <Text6 Ref="16" type="Text" isKey="true">
+              <Brush>[237:227:249]</Brush>
+              <ClientRectangle>2.2,0.1,1.5,0.2</ClientRectangle>
+              <ComponentStyle>Style4</ComponentStyle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Regular,Point,False,178</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,10,0,0</Margins>
+              <Name>Text6</Name>
+              <Page isRef="5" />
+              <Parent isRef="12" />
+              <Text>{ReportMealR.FiscalYearName}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>DataColumn</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text6>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataSourceName isNull="true" />
+          <Filters isList="true" count="0" />
+          <Name>DataBand1</Name>
+          <NewPageBefore>True</NewPageBefore>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+          <Sort isList="true" count="0" />
+        </DataBand1>
+        <DataBand2 Ref="17" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid>5f452c08278e45259913d318c8f1e2b8</BusinessObjectGuid>
+          <ClientRectangle>0,1.8,7.72,0.5</ClientRectangle>
+          <Components isList="true" count="2">
+            <Text3 Ref="18" type="Text" isKey="true">
+              <Brush>[237:227:249]</Brush>
+              <ClientRectangle>6.6,0.1,1.1,0.2</ClientRectangle>
+              <ComponentStyle>Style4</ComponentStyle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Regular,Point,False,178</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,10,0,0</Margins>
+              <Name>Text3</Name>
+              <Page isRef="5" />
+              <Parent isRef="17" />
+              <Text>:نام زیر مجموعه</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text3>
+            <Text4 Ref="19" type="Text" isKey="true">
+              <Brush>[237:227:249]</Brush>
+              <ClientRectangle>3.8,0.1,2.8,0.2</ClientRectangle>
+              <ComponentStyle>Style4</ComponentStyle>
+              <Conditions isList="true" count="0" />
+              <Font>B Nazanin,12,Regular,Point,False,178</Font>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text4</Name>
+              <Page isRef="5" />
+              <Parent isRef="17" />
+              <Text>{ReportMealR.ReportSubClientMealR.SubClientName}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text4>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataSourceName isNull="true" />
+          <Filters isList="true" count="0" />
+          <Name>DataBand2</Name>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+          <Sort isList="true" count="0" />
+        </DataBand2>
+        <DataBand3 Ref="20" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid>567f6931b7324b6d8cc1d010a158e940</BusinessObjectGuid>
+          <ClientRectangle>0,2.7,7.72,1.3</ClientRectangle>
+          <Components isList="true" count="1">
+            <CrossTab1 Ref="21" type="Stimulsoft.Report.CrossTab.StiCrossTab" isKey="true">
+              <Brush>Transparent</Brush>
+              <BusinessObjectGuid>567f6931b7324b6d8cc1d010a158e940</BusinessObjectGuid>
+              <ClientRectangle>0,0,7.72,1.3</ClientRectangle>
+              <Components isList="true" count="8">
+                <CrossTab1_RowTotal1 Ref="22" type="CrossRowTotal" isKey="true">
+                  <Brush>[240:241:255]</Brush>
+                  <ClientRectangle>0,0.64,0.7,0.2</ClientRectangle>
+                  <ComponentStyle>Style6</ComponentStyle>
+                  <Conditions isList="true" count="0" />
+                  <Font>B Nazanin,12,Regular,Point,False,178</Font>
+                  <Guid>8fbdf189d0d943f7a7ea509e40086474</Guid>
+                  <HorAlignment>Right</HorAlignment>
+                  <Margins>0,0,0,0</Margins>
+                  <Name>CrossTab1_RowTotal1</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>تعداد کل</Text>
+                  <TextBrush>Black</TextBrush>
+                </CrossTab1_RowTotal1>
+                <CrossTab1_Row1_Title Ref="23" type="CrossTitle" isKey="true">
+                  <Brush>[240:241:255]</Brush>
+                  <ClientRectangle>0,0.22,0.7,0.2</ClientRectangle>
+                  <ComponentStyle>Style6</ComponentStyle>
+                  <Font>B Nazanin,12,Regular,Point,False,178</Font>
+                  <Guid>d1ff1fc6e96b4006b94c6639893c4a1d</Guid>
+                  <HorAlignment>Right</HorAlignment>
+                  <Margins>0,0,0,0</Margins>
+                  <Name>CrossTab1_Row1_Title</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>نام غذا</Text>
+                  <TextBrush>Black</TextBrush>
+                  <TypeOfComponent>Row:CrossTab1_Row1</TypeOfComponent>
+                </CrossTab1_Row1_Title>
+                <CrossTab1_ColTotal1 Ref="24" type="CrossColumnTotal" isKey="true">
+                  <Border>All;[253:234:218];1;Solid;False;4;Black</Border>
+                  <Brush>[255:255:255]</Brush>
+                  <ClientRectangle>1.32,0.22,0.4,0.2</ClientRectangle>
+                  <Conditions isList="true" count="0" />
+                  <Font>B Nazanin,12</Font>
+                  <Guid>14ddf9c8a4b545e5b59cd64430e0589f</Guid>
+                  <Margins>0,0,0,0</Margins>
+                  <Name>CrossTab1_ColTotal1</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>تعداد کل</Text>
+                  <TextBrush>Black</TextBrush>
+                </CrossTab1_ColTotal1>
+                <CrossTab1_LeftTitle Ref="25" type="CrossTitle" isKey="true">
+                  <Brush>[240:241:255]</Brush>
+                  <ClientRectangle>0,0,0.7,0.2</ClientRectangle>
+                  <ComponentStyle>Style6</ComponentStyle>
+                  <Font>B Nazanin,12,Regular,Point,False,178</Font>
+                  <Guid>6395d95f83d746089fbcb25ebc978c50</Guid>
+                  <HorAlignment>Right</HorAlignment>
+                  <Margins>0,0,0,0</Margins>
+                  <Name>CrossTab1_LeftTitle</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>گزارش تعداد غذا</Text>
+                  <TextBrush>Black</TextBrush>
+                  <TypeOfComponent>LeftTitle</TypeOfComponent>
+                </CrossTab1_LeftTitle>
+                <CrossTab1_RightTitle Ref="26" type="CrossTitle" isKey="true">
+                  <Brush>[240:241:255]</Brush>
+                  <ClientRectangle>0.72,0,1,0.2</ClientRectangle>
+                  <ComponentStyle>Style6</ComponentStyle>
+                  <Font>B Nazanin,12,Regular,Point,False,178</Font>
+                  <Guid>12da2ffbd4ad4b058c9df8a38c62e43f</Guid>
+                  <Margins>0,0,0,0</Margins>
+                  <Name>CrossTab1_RightTitle</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>وعده ی غذایی</Text>
+                  <TextBrush>Black</TextBrush>
+                  <TypeOfComponent>RightTitle</TypeOfComponent>
+                </CrossTab1_RightTitle>
+                <CrossTab1_Row1 Ref="27" type="CrossRow" isKey="true">
+                  <Alias>FoodName</Alias>
+                  <Brush>[240:241:255]</Brush>
+                  <ClientRectangle>0,0.44,0.7,0.2</ClientRectangle>
+                  <ComponentStyle>Style6</ComponentStyle>
+                  <Conditions isList="true" count="0" />
+                  <DisplayValue>{ReportMealR.ReportSubClientMealR.ReportSubRMealR.FoodName}</DisplayValue>
+                  <Font>B Nazanin,12,Regular,Point,False,178</Font>
+                  <Guid>40bed3f0a52f416eaeb7973185ea4a0b</Guid>
+                  <HorAlignment>Right</HorAlignment>
+                  <Margins>0,0,0,0</Margins>
+                  <Name>CrossTab1_Row1</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>FoodName</Text>
+                  <TextBrush>Black</TextBrush>
+                  <TotalGuid>8fbdf189d0d943f7a7ea509e40086474</TotalGuid>
+                  <Value>{ReportMealR.ReportSubClientMealR.ReportSubRMealR.FoodName}</Value>
+                </CrossTab1_Row1>
+                <CrossTab1_Column1 Ref="28" type="CrossColumn" isKey="true">
+                  <Alias>MealName</Alias>
+                  <Border>All;[253:234:218];1;Solid;False;4;Black</Border>
+                  <Brush>White</Brush>
+                  <ClientRectangle>0.72,0.22,0.6,0.2</ClientRectangle>
+                  <Conditions isList="true" count="0" />
+                  <DisplayValue>{ReportMealR.ReportSubClientMealR.ReportSubRMealR.MealName}</DisplayValue>
+                  <Font>B Nazanin,12</Font>
+                  <Guid>53aa996090da4f8a9fa2a7b7f9712d10</Guid>
+                  <Margins>0,0,0,0</Margins>
+                  <Name>CrossTab1_Column1</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>MealName</Text>
+                  <TextBrush>[105:105:105]</TextBrush>
+                  <TotalGuid>14ddf9c8a4b545e5b59cd64430e0589f</TotalGuid>
+                  <Value>{ReportMealR.ReportSubClientMealR.ReportSubRMealR.MealName}</Value>
+                </CrossTab1_Column1>
+                <CrossTab1_Sum1 Ref="29" type="CrossSummary" isKey="true">
+                  <Alias>Count</Alias>
+                  <Border>All;[253:234:218];1;Solid;False;4;Black</Border>
+                  <Brush>[255:255:255]</Brush>
+                  <ClientRectangle>0.72,0.44,2,0.2</ClientRectangle>
+                  <Conditions isList="true" count="0" />
+                  <Font>B Nazanin,12</Font>
+                  <Guid>6cae086b245c4f5497b1f58b110b5792</Guid>
+                  <HorAlignment>Center</HorAlignment>
+                  <Margins>0,0,0,0</Margins>
+                  <MinSize>2,0</MinSize>
+                  <Name>CrossTab1_Sum1</Name>
+                  <Page isRef="5" />
+                  <Parent isRef="21" />
+                  <Restrictions>AllowMove, AllowResize, AllowSelect, AllowChange</Restrictions>
+                  <Text>0</Text>
+                  <TextBrush>Black</TextBrush>
+                  <Value>{ReportMealR.ReportSubClientMealR.ReportSubRMealR.Count}</Value>
+                </CrossTab1_Sum1>
+              </Components>
+              <Conditions isList="true" count="0" />
+              <DataRelationName />
+              <DockStyle>Fill</DockStyle>
+              <EmptyValue />
+              <Filters isList="true" count="0" />
+              <HorAlignment>Right</HorAlignment>
+              <Name>CrossTab1</Name>
+              <Page isRef="5" />
+              <Parent isRef="20" />
+              <RightToLeft>True</RightToLeft>
+              <Sort isList="true" count="0" />
+            </CrossTab1>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataSourceName isNull="true" />
+          <Filters isList="true" count="0" />
+          <Name>DataBand3</Name>
+          <Page isRef="5" />
+          <Parent isRef="5" />
+          <Sort isList="true" count="0" />
+        </DataBand3>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>e6daa1cd604b40fd801e6573d8e4eeb2</Guid>
+      <Margins>0.39,0.39,0.39,0.39</Margins>
+      <Name>Page1</Name>
+      <PageHeight>11</PageHeight>
+      <PageWidth>8.5</PageWidth>
+      <PaperSize>Letter</PaperSize>
+      <Report isRef="0" />
+      <Watermark Ref="30" type="Stimulsoft.Report.Components.StiWatermark" isKey="true">
+        <Font>Arial,100</Font>
+        <TextBrush>[50:0:0:0]</TextBrush>
+      </Watermark>
+    </Page1>
+  </Pages>
+  <PrinterSettings Ref="31" type="Stimulsoft.Report.Print.StiPrinterSettings" isKey="true" />
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>1/25/2017 12:28:56 PM</ReportChanged>
+  <ReportCreated>12/10/2016 7:55:10 AM</ReportCreated>
+  <ReportFile>D:\SVN\Archive1\YA.Archive.MVC2\Reports\ReportMeal1.mrt</ReportFile>
+  <ReportGuid>d2805b11466243348b6ae2a9fa062baa</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Inches</ReportUnit>
+  <ReportVersion>2015.2.0</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        public Report()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="6">
+    <Style1 Ref="32" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>BlanchedAlmond</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,8.25,Regular,Point,False,178</Font>
+      <Name>Style1</Name>
+      <TextBrush>Black</TextBrush>
+    </Style1>
+    <Style2 Ref="33" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[199:210:224]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style2</Name>
+      <TextBrush>Black</TextBrush>
+    </Style2>
+    <Style3 Ref="34" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[213:232:234]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style3</Name>
+      <TextBrush>Black</TextBrush>
+    </Style3>
+    <Style4 Ref="35" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[237:227:249]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style4</Name>
+      <TextBrush>Black</TextBrush>
+    </Style4>
+    <Style5 Ref="36" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>Transparent</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style5</Name>
+      <TextBrush>Black</TextBrush>
+    </Style5>
+    <Style6 Ref="37" type="Stimulsoft.Report.StiStyle" isKey="true">
+      <Brush>[240:241:255]</Brush>
+      <Conditions isList="true" count="0" />
+      <Font>B Nazanin,12,Regular,Point,False,178</Font>
+      <HorAlignment>Right</HorAlignment>
+      <Name>Style6</Name>
+      <TextBrush>Black</TextBrush>
+    </Style6>
+  </Styles>
+</StiSerializer>

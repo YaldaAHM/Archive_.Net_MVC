@@ -1,0 +1,230 @@
+﻿@using System.Security.Claims
+@using YA.Archive.Infrastructure.Infrastructure.Permission
+@using YA.Archive.MVC2.Models
+@using YA.Archive.MVC2.Models.UserLog
+
+@{
+    ViewBag.Title = "Users";
+}
+@Html.Partial("_SiteMap", ViewData["UsersSiteMap"])
+
+@(Html.Kendo().Grid<UserLogVM>().Name("users")
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Events(events =>
+        {
+            events.Error("error_handler");
+            events.RequestEnd("onRequestEnd");
+
+        })
+        .Model(model => model.Id(m => m.Id))
+            .Read(read => read.Action("Read", "UserLogTime").Data("usersReadData"))
+
+    )
+
+    .Columns(columns =>
+    {
+        columns.Template(t => { }).Title("Row No").ClientTemplate("#= renderNumber(data) #").Hidden(true);
+        columns.Template(t => { }).Title("Number").ClientTemplate("#= renderRecordNumber(data) #");
+        columns.Bound(p => p.Id).Sortable(false).Visible(false);
+
+        columns.Bound(p => p.UserName).Title("User Name").Width(200);
+        ;
+        columns.Bound(p => p.LoginTimeStr).Title("Login Time").Width(200);
+        columns.Bound(p => p.LogoutTimeStr).Title("Log Out Time").Width(200);
+        ;
+        if (Request.IsAuthenticated && !User.IsInRole(RolesT.MainCenter))
+        {
+            columns.ForeignKey(p => p.ClientCenterId, (System.Collections.IEnumerable) ViewData["ClientCenters"], "Id", "Name").Title("Center Name")
+                .Hidden();
+        }
+        else
+        {
+            columns.ForeignKey(p => p.ClientCenterId, (System.Collections.IEnumerable)ViewData["ClientCenters"], "Id", "Name").Title("Center Name")
+                .Width(100);
+        }
+        columns.Bound(x => x.Groups).ClientTemplate("#= renderMultiSelectText(data.Groups) #")
+                .EditorTemplateName("GroupsEditor");
+
+
+
+
+
+
+    })
+    .ToolBar(toolbar =>
+    {
+    toolbar.Template(@<text>
+        <div class="toolbar" style="float: left">
+     
+            @Html.ActionLink(" Report  ", "Index", "ReportUserLogTime", null, new
+{
+    @class = "k-button k-button-icontext",
+    style = "background-color: lightsteelblue;"
+})
+          @*}*@
+           
+            <a style='margin-left: 10px; background-color: lightsteelblue;' class='k-button k-button-icontext' onclick='searchCommand()' href='#'>
+                &nbsp; &nbsp; Search &nbsp;&nbsp;
+            </a>
+            <div id="divt"> @Html.Partial("_SearchUser") </div>
+
+        </div>
+    </text>);
+    })
+
+  
+
+     .Pageable(pager => pager
+              .Messages(messages => messages.Display("{0} to {1} . Total {2}")).Messages(messages => messages.Empty("No information has been registered")))
+
+    .Events(e =>
+    {
+        e.Edit("onEdit");
+        e.DataBound("onDataBound");
+    })
+    .Sortable()
+
+)
+
+
+<script type="text/javascript">
+    function searchCommand() {
+        $("#divt").toggle("slow");
+    }
+    $(document).ready(function() {
+        $("#divt").toggle("9999999");
+    });
+    var rowNumber = 0;
+
+    function renderNumber(data) {
+        return ++rowNumber;
+    }
+    function renderRecordNumber(data) {
+        var page = parseInt($("#users").data("kendoGrid").dataSource.page()) - 1;
+        var pagesize = $("#users").data("kendoGrid").dataSource.pageSize();
+        return parseInt(rowNumber + (parseInt(page) * parseInt(pagesize)));
+    }
+    function onDataBound(e) {
+        rowNumber = 0;
+        if (ss == true) {
+            if (!e.sender.dataSource.view().length) {
+                 Lobibox.notify('info', {
+                    title: 'Search',
+                    msg: "There are no items to display",
+                    position: 'bottom left',
+                });
+            } else {
+                Lobibox.notify('success', {
+                    title: 'Search',
+                    msg: "Search was done successfully.",
+                    position: 'bottom left',
+                });
+            }
+        }
+        ss = false;
+    }
+    function onEdit(e) {
+
+        $("#SUserName").val("");
+        $("#SClientCenterId").val("");
+        $("#SGroups").val("");
+        e.container.find(".k-grid-update").on("click", function (e) {
+          
+            $("#SClientCenterId").val("");
+            $("#SGroups").val("");
+        });
+    }
+
+</script>
+
+<script type="text/javascript">
+    function onRequestEnd(e) {
+      
+        
+    }
+
+
+</script>
+<script type="text/javascript">
+  
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Error :\n";
+            $.each(e.errors, function(key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                   
+                        //window.location.href = "@Url.Action("Index", "Users")";
+                    });
+                }
+            });
+            e.sender.read();
+            e.sender._destroyed = [];
+            Lobibox.alert('error', {
+                msg: message,
+                title: "Error!",
+                buttons: {
+                    ok: {
+                        text: "Close",
+                        'class': 'btn btn-danger bthwidth',
+                    }
+                }
+            });
+            $("#users").data("kendoGrid").dataSource.read();
+        }
+    }
+
+
+</script>
+<script>
+    var ss = false;
+    var IsClickSearch = false;
+    $("#btnSearchT").click(function (e) {
+        e.preventDefault();
+        $("#divt").toggle("slow");
+
+    });
+    $("#btnSearch").click(function (e) {
+        e.preventDefault();
+        ss = true;
+        IsClickSearch = true;
+        $("#users").data("kendoGrid").dataSource.read();
+        IsClickSearch = false;
+        $("#divt").toggle("slow");
+
+
+    });
+
+    function usersReadData() {
+        return {
+            sIsClickSearch: IsClickSearch,
+               sStartDate: $("#SStartDate").val(),
+            sEndDate: $("#SEndDate").val(),
+            sUserName: $("#SUserName").val(),
+            sClientCenterId: $("#SClientCenterId").val(),
+            sGroups: $("#SGroups").val(),
+            
+        };
+    }
+</script>
+
+<script>
+    function renderMultiSelectText(selectListArray) {
+        if (selectListArray != undefined && selectListArray[0] != undefined) {
+
+            var displayText;
+            $.each(selectListArray, function(index) {
+                if (displayText == undefined)
+                    displayText = selectListArray[index].Name + " ,";
+                else
+                    displayText = displayText + selectListArray[index].Name + " ,";
+            });
+            return displayText.slice(0, -2);
+        } else
+            return "";
+    }
+
+
+</script>

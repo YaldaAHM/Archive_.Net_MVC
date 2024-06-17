@@ -1,0 +1,16 @@
+﻿
+    @{
+        Layout = null;
+    }
+
+   @(Html.Kendo().MultiSelect()
+                                  .Name("TypesOfFiles")
+                                      .DataValueField("Id")
+                                      .DataTextField("Name")
+                                   
+                                      .BindTo((System.Collections.IEnumerable)ViewData["TypeOfFile"])
+                                   
+)
+
+
+    

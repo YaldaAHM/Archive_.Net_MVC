@@ -1,0 +1,325 @@
+﻿@using System.Security.Claims
+@using Kendo.Mvc.UI
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Type of File</title>
+</head>
+<body>
+    <div>
+        @Html.Partial("_SiteMap", ViewData["TypeOfFileSiteMap"])
+
+        @(Html.Kendo().Grid<YA.Archive.Service.TypeofFileMdl.VMs.TypeofFileVM>()
+          .Name("grid")
+          .Columns(columns =>
+          {
+          columns.Template(@<text></text>).ClientTemplate("<input type='checkbox'  class='checkbox'/>").Title("<input type='checkbox'/>")
+                                     .Width(10).Title("Select").HtmlAttributes(new
+                                     {
+                                         @onclick = "click",
+                                         style = "align:center;float:none;text-align:center; font-size:12px; vertical-align: middle;"
+                                     })
+                                         .HeaderHtmlAttributes(new { style = "overflow: visible; white-space: normal; text-align:center; " });
+              columns.Template(t => { }).Title("Row No").ClientTemplate("#= renderNumber(data) #").Hidden(true);
+              columns.Template(t => { }).Title("Number").ClientTemplate("#= renderRecordNumber(data) #");
+              columns.Bound(p => p.Id).Sortable(false).Visible(false);
+
+              columns.Bound(p => p.Name).Width(900);
+
+              columns.Command(command =>
+              {
+                  if (((ClaimsIdentity)User.Identity).HasClaim("TypeOfFolder", "CanEditTypeOfFolder"))
+                      command.Edit().Text("Edit")
+                          .UpdateText("Ok")
+                          .CancelText("Cancel");
+
+                  // command.Destroy().Text("Delete");
+
+
+
+              });
+              if (((ClaimsIdentity)User.Identity).HasClaim("TypeOfFolder", "CanDeleteTypeOfFolder"))
+                  columns.Command(c => c.Custom("Custom Delete").Text("Delete<span class='k-icon k-delete'></span>").Click("customDelete").
+                
+                   HtmlAttributes(new
+                   {
+                       style = "background:darksalmon",
+
+                   }));
+               })
+         
+
+          .ToolBar(toolbar =>
+          {
+
+          
+          toolbar.Template(@<text>
+            <div class="toolbar" style="float: left">
+                @if (((ClaimsIdentity)User.Identity).HasClaim("TypeOfFolder", "CanCreateTypeOfFolder"))
+                {
+
+                    <a class="k-button k-button-icontext k-grid-add" href="#">
+                        <i class=""></i> Add new Attachment Type
+                    </a>
+                }
+
+                @if (((ClaimsIdentity)User.Identity).HasClaim("TypeOfFolder", "CanDeleteTypeOfFolder"))
+                {
+                    <a style='margin-left: 10px; background-color: lightsteelblue;'
+                       class='k-button k-button-icontext' id="actionButton" href='#'>
+                        &nbsp; &nbsp; Delete &nbsp;&nbsp;
+                    </a>}
+            </div>
+        </text>);
+
+
+          })
+          .Editable(editable =>
+          {
+              editable.Mode(GridEditMode.PopUp).Window(w => w.Width(400).Title(""));
+              editable.DisplayDeleteConfirmation(false);
+          })
+          .Pageable(pager => pager
+              .Messages(messages => messages.Display("{0} to {1} . Total {2}")).Messages(messages => messages.Empty("No information has been registered")))
+          .Sortable()
+          //  .Groupable(g => g.Messages(m => m.Empty("Select")))
+
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .PageSize(10)
+               .Events(events =>
+               {
+                   events.Error("error_handler");
+                   events.RequestEnd("onRequestEnd");
+
+               })
+
+              .Model(model => model.Id(p => p.Id))
+              .Create(update => update.Action("Create", "TypeOfFile"))
+              .Read(read => read.Action("Read", "TypeOfFile"))//.Data("productsReadData"))
+              .Update(update => update.Action("Edit", "TypeOfFile"))
+              .Destroy(update => update.Action("Delete", "TypeOfFile"))
+          )
+          .Events(e =>
+{
+    e.Edit("onEdit");
+    e.DataBound("onDataBound");
+})
+
+)
+        @*@Html.Partial("_SearchTF")*@
+
+  
+
+    <script type="text/javascript">
+        var rowNumber = 0;
+
+        function renderNumber(data) {
+        return ++rowNumber;
+    }
+        function renderRecordNumber(data) {
+            var page = parseInt($("#grid").data("kendoGrid").dataSource.page()) - 1;
+            var pagesize = $("#grid").data("kendoGrid").dataSource.pageSize();
+            return parseInt(rowNumber + (parseInt(page) * parseInt(pagesize)));
+        }
+        function onEdit(e) {
+            $('[name="Id"]').attr("Hidden", true);
+            $('#Name').css("width", "250px;");
+            $('#Name').addClass("width-textbox");
+        }
+        function onDataBound(e) {
+            rowNumber = 0;
+        }
+    </script>
+        <script type="text/javascript">
+            function onRequestEnd(e) {
+
+                if (e.type == "create" && !e.response.Errors) {
+                    if (e.response == null || e.response.Errors == null) {
+                        setTimeout(function myfunction() {
+                               Lobibox.alert('success', {
+                                msg: "Ok. done successfully",
+                                title: "successful",
+                                buttons: {
+                                    ok: {
+                                        text:"Ok",
+                                        'class': 'btn btn-success bthwidth',
+                                    }}
+                            });
+                            $("#grid").data("kendoGrid").dataSource.read();
+                           
+                        }, 1000);
+
+
+                    }
+                }
+                else if (e.type == "destroy"&& !e.response.Errors) {
+                    if (e.response == null || e.response.Errors == null) {
+                    setTimeout(function myfunction() {
+                        Lobibox.alert('success', {
+                            msg: "Delete was done successfully.",
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                        $("#grid").data("kendoGrid").dataSource.read();
+                    }, 1000);
+                }}
+                else if (e.type == "update" && !e.response.Errors) {
+                    if (e.response == null || e.response.Errors == null) {
+
+                        setTimeout(function myfunction() {
+
+                            Lobibox.alert('success', {
+                                msg: "Edit was done successfully.",
+                                title: "successful",
+                            buttons: {
+                                ok: {
+                                        text:"Ok",
+                                        'class': 'btn btn-success bthwidth',
+                                        }}
+                        });
+                            
+                            $("#grid").data("kendoGrid").dataSource.read();
+                            
+                        }, 100);
+
+                    }
+                }
+               
+            }
+            function error_handler(e) {
+                if (e.errors) {
+                    var message = "Error:\n";
+                    $.each(e.errors, function (key, value) {
+                        if ('errors' in value) {
+                            $.each(value.errors, function () {
+                                message += this + "\n";
+                            });
+                        }
+                    });
+                    e.sender.read();
+                    e.sender._destroyed = [];
+                    $("#grid").data("kendoGrid").dataSource.read();
+                    Lobibox.alert('error', {
+                        msg: message,
+                        title: "Error!",
+                        buttons: {
+                            ok: {
+                                text: "Close",
+                                'class': 'btn btn-danger bthwidth',
+                            }
+                        }
+                    });
+
+                }
+            }
+        </script>
+    <script type="text/javascript">
+
+        function showDetails(e) {
+            e.preventDefault();
+            var d = this.dataItem($(e.currentTarget).closest("tr"));
+            window.location.href = "@Url.Action("Index", "TypeOfFile")/" + d.Id;
+        }
+    </script>
+        <script>
+            $("#vv").click(function (e) {
+                e.preventDefault();
+
+                $("#grid").data("kendoGrid").dataSource.read();
+               
+            });
+            function productsReadData(hh) {
+                return {
+                    ss: $("#ss").val(),
+                }; 
+               
+               
+            }
+            $("#customCommand").click(function(e) {
+                e.preventDefault();
+                alert("okok");
+            });
+
+        </script>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+            document.getElementById("mainSS").style.marginLeft = "250px";
+            document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("mainSS").style.marginLeft= "0";
+            document.body.style.backgroundColor = "white";
+        }
+
+
+
+
+        $("#actionButton").click(function () {
+            var idsToSend = [];
+            var dd = "";
+            var grid = $("#grid").data("kendoGrid");
+            var ds = grid.dataSource.view();
+
+            for (var i = 0; i < ds.length; i++) {
+                var row = grid.table.find("tr[data-uid='" + ds[i].uid + "']");
+                var checkbox = $(row).find(".checkbox");
+                if (checkbox.is(":checked")) {
+                    idsToSend.push(ds[i].Id);
+
+                }
+            }
+            dd = idsToSend.toString();
+            //alert(dd);
+            $.ajax({
+                url: '@Url.Action("MultiDelete", "TypeOfFile")',
+                type: "Post",
+                data: { Ids: dd },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.IsSuccess) {
+                        Lobibox.alert('success', {
+                            msg: result.Message,
+                            title: "successful",
+                            buttons: {
+                                ok: {
+                                    text: "Ok",
+                                    'class': 'btn btn-success bthwidth',
+                                }
+                            }
+                        });
+                    } else {
+                        Lobibox.alert('error', {
+                            msg: result.Message,
+                            title: "Error!",
+                            buttons: {
+                                ok: {
+                                    text: "Close",
+                                    'class': 'btn btn-danger bthwidth',
+                                }
+                            }
+                        });
+                    }
+                    $("#grid").data("kendoGrid").dataSource.read();
+                }
+            });
+            //this obviously won't work , but just to illustrate the point.          
+            $.post("/whatever", { ids: idsToSend });
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,622 @@
+﻿@using YA.Archive.MVC2.Models
+@model YA.Archive.MVC2.Models.Folder.Project
+@using YA.Archive.Infrastructure.Infrastructure.Permission
+<style>
+    .multilinetextsize {
+        width: 500px;
+        height: 150px;
+    }
+     .sp {
+        margin-top: -60px;
+    }
+     .widget {
+         width: 250px;
+    }
+</style>
+<form id="project" action="@Url.Action("Create")" method="POST">
+    <br />
+    @Html.HiddenFor(model => model.Id)
+    <div style="padding-right: 20px; padding-left: 80px; padding-bottom: 20px;">
+        <div class="row show-grid-forms">
+            @Html.LabelFor(model => model.Name, new {@class = "col-sm-2"})
+
+            <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+                @Html.TextBoxFor(model => model.Name, new
+                                                      {
+                                                          @class = "k-input",
+                                                          style="width:90%"
+                                                      })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+   
+    @Html.LabelFor(m => m.ClientCenterId, new {@class = "col-sm-2", style = "margin-left:50px"})
+    <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+        
+
+        @(Html.Kendo().ComboBox()
+              .Name("ClientCenterId")
+      
+              .DataTextField("Name")
+              .DataValueField("Id")
+              .HtmlAttributes(new {style = "width:90%;"})
+              .Suggest(true)
+              .Filter("contains")
+              .Placeholder("Select Client Center")
+
+              .DataSource(source => source
+                  .Custom()
+                  .Transport(transport => transport
+                      .Read(read => read.Action("DropClientCenter", "Project").DataType("json"))
+                  )
+              )
+              )
+
+    </div>
+    @Html.ValidationMessageFor(model => model.Name)
+   
+     
+            @Html.LabelFor(m=>m.TypeofFolders, new { @class = "col-sm-2", style = "margin-left:50px" })
+            <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+                @(Html.Kendo().MultiSelect()
+                      .Name("TypeofFolders")
+                      .DataValueField("Id")
+                      .DataTextField("Name")
+                      .Placeholder("Select Document Type")
+                 .HtmlAttributes(new { style = "width:100%;" })
+                      .DataSource(source => source
+                          .Custom()
+                          .Transport(transport => transport
+                              .Read(read => read.Action("MultiTypeOfFolder", "Project").DataType("json"))
+                          )
+                      )
+               
+                )
+
+
+
+
+            </div>
+        </div>
+        <div class="row show-grid-forms">
+            @*<div class="form-group">*@
+            @Html.LabelFor(m => m.KeyWord, new { @class = "col-sm-2" })
+            <div class="col-sm-4" style="margin-left: -170px; margin-top: 20px">
+                @Html.TextBoxFor(m => m.KeyWord,
+
+                new
+                {
+                    @class = "form-control",
+                    style = "direction: ltr; width:200px;",
+                    title = @Html.DisplayNameFor(m => m.KeyWord),
+                    placeholder = @Html.DisplayNameFor(m => m.KeyWord),
+
+                })
+
+            </div>
+        @*</div>
+        <div class="row sp">*@
+            @Html.LabelFor(m => m.Description, new { @class = "col-sm-2" })
+            <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+                @Html.EditorFor(model => model.Description, new { @class = "k-textbox,multilinetextsize" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+
+        
+
+        <div class="row show-grid-forms">
+           
+            @Html.Hidden("EditLockDateH")
+@if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                            || User.IsInRole(RolesT.AdminClient)))
+{
+            @Html.LabelFor(m => m.EditLockDate, new { @class = "col-sm-2" })
+            <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+                @(Html.Kendo().DatePicker()
+                          .Name("EditLockDate")
+                     
+                          .Value("")
+                           .Format("yyyy/MM/dd")
+                            .HtmlAttributes(new { style = "width:100%;" })
+           
+                )
+            </div>
+           
+            }
+           
+@if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                            || User.IsInRole(RolesT.AdminClient)))
+{
+            @Html.LabelFor(m => m.RemoveLockDate, new { @class = "col-sm-2", style = "margin-left:50px" })
+            <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+                
+                @(Html.Kendo().DatePicker()
+                  .Name("RemoveLockDate")
+                   .HtmlAttributes(new { style = "width:100%;" })
+             
+                  .Value("")
+                   .Format("yyyy/MM/dd")
+           
+                )
+            </div>
+            @*}*@
+            }
+            
+@if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                            || User.IsInRole(RolesT.AdminClient)))
+{
+            @Html.LabelFor(m => m.EditCommentLockDate, new { @class = "col-sm-2", style = "margin-left:50px" })
+            <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+               
+                @(Html.Kendo().DatePicker()
+                          .Name("EditCommentLockDate")
+                     
+                          .Value("")
+                          .Format("yyyy/MM/dd")
+                           .HtmlAttributes(new { style = "width:100%;" })
+           
+                )
+            </div>
+            
+            }
+            
+        </div>
+    <div class="row show-grid-forms">
+        @if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                            || User.IsInRole(RolesT.AdminClient)))
+        {
+        @Html.LabelFor(m => m.RemoveCommentLockDate, new {@class = "col-sm-2"})
+        <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+           
+            @(Html.Kendo().DatePicker()
+                  .Name("RemoveCommentLockDate")
+             
+                  .Value("")
+                  .HtmlAttributes(new {style = "width:100%;"})
+                  .Format("yyyy/MM/dd")
+                 
+                  )
+        </div>
+       
+        }
+       
+        @if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                            || User.IsInRole(RolesT.AdminClient)))
+        {
+                    @Html.LabelFor(m => m.EditFileLockDate, new {@class = "col-sm-2", style = "margin-left:50px"})
+                    <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+
+                @(Html.Kendo().DatePicker()
+
+                      .Name("EditFileLockDate")
+                 
+                      .Value("")
+                      .HtmlAttributes(new {style = "width:100%;"})
+                      .Format("yyyy/MM/dd")
+                     
+                      )
+            </div>
+                @*}*@
+        }
+      @if (Request.IsAuthenticated && (User.IsInRole(RolesT.Administrators)
+                         || User.IsInRole(RolesT.AdminClient)))
+    {
+           @Html.LabelFor(m => m.RemoveFileLockDate, new {@class = "col-sm-2", style = "margin-left:50px"})
+           <div class="col-sm-3" style="margin-left: -170px; margin-top: 20px">
+              
+               @(Html.Kendo().DatePicker()
+                     .Name("RemoveFileLockDate")
+                
+                     .Value("")
+                     .HtmlAttributes(new {style = "width:100%;"})
+                     .Format("yyyy/MM/dd")
+                    
+                  
+                     )
+           </div>
+   
+       }
+    </div>
+
+    </div>
+</form>
+
+
+<div>
+  
+</div>
+<div>
+    
+</div>
+
+
+
+ 
+<link href="~/Scripts/TagsInput/bootstrap-tagsinput.css" rel="stylesheet" />
+<script src="~/Scripts/TagsInput/bootstrap-tagsinput.js"></script>
+<script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#KeyWord").keypress(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                }
+            }).tagsinput();
+            $("#KeyWord").addClass("k-textbox");
+            $("#Description").addClass("k-textbox");
+            $("#Description").css({ "width": "320px"
+               , "height": "80px"});
+                
+
+
+                            $('[aria-controls="EditLockDate_dateview"]').click(function () {
+                                var EditLockDate = $('#EditLockDate').val();
+                                $.ajax({
+                                    url: '/Project/CommentsEditLockDate',
+                                    type: 'POST',
+                                    data: {
+                                        EditLockDate: "1100/11/22",
+                                    },
+                                    success: function (data) {
+                                        $('#EditLockDate').val("");
+                                    }
+                                });
+                            });
+                           
+
+
+                            $('[aria-controls="RemoveLockDate_dateview"]').click(function () {
+                                var RemoveLockDate = $('#RemoveLockDate').val();
+                                $.ajax({
+                                    url: '/Project/CommentsRemoveLockDate',
+                                    type: 'POST',
+                                    data: {
+                                        RemoveLockDate: "1100/11/22",
+                                    },
+                                    success: function (data) {
+                                        $('#RemoveLockDate').val("");
+                                    }
+                                });
+                            });
+                           
+
+
+                            $('[aria-controls="EditFileLockDate_dateview"]').click(function () {
+                                var EditFileLockDate = $('#EditFileLockDate').val();
+                                $.ajax({
+                                    url: '/Project/CommentsEditFileLockDate',
+                                    type: 'POST',
+                                    data: {
+                                        EditFileLockDate: "1100/11/22",
+                                    },
+                                    success: function (data) {
+                                        $('#EditFileLockDate').val("");
+                                    }
+                                });
+                            });
+                            
+
+
+                            $('[aria-controls="RemoveFileLockDate_dateview"]').click(function () {
+                                var RemoveFileLockDate = $('#RemoveFileLockDate').val();
+                                $.ajax({
+                                    url: '/Project/CommentsRemoveFileLockDate',
+                                    type: 'POST',
+                                    data: {
+                                        RemoveFileLockDate: "1100/11/22",
+                                    },
+                                    success: function (data) {
+                                        $('#RemoveFileLockDate').val("");
+                                    }
+                                });
+                            });
+                          
+
+
+                            $('[aria-controls="EditCommentLockDate_dateview"]').click(function () {
+                                var EditCommentLockDate = $('#EditCommentLockDate').val();
+                                $.ajax({
+                                    url: '/Project/CommentsEditCommentLockDate',
+                                    type: 'POST',
+                                    data: {
+                                        EditCommentLockDate: "1100/11/22",
+                                    },
+                                    success: function (data) {
+                                        $('#EditCommentLockDate').val("");
+                                    }
+                                });
+                            });
+                          
+
+
+            $('[aria-controls="RemoveCommentLockDate_dateview"]').click(function() {
+                var RemoveCommentLockDate = $('#RemoveCommentLockDate').val();
+                $.ajax({
+                    url: '/Project/CommentsRemoveCommentLockDate',
+                    type: 'POST',
+                    data: {
+                        RemoveCommentLockDate: "1100/11/22",
+                    },
+                    success: function(data) {
+                        $('#RemoveCommentLockDate').val("");
+                    }
+                });
+            });
+
+                
+
+            $("#EditLockDate").keydown(function (e) {
+                var EditLockDate = $('#EditLockDate').val();
+              
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                    $.ajax({
+                        url: '/Project/CommentsEditLockDate',
+                        type: 'POST',
+                        data: {
+                            EditLockDate: "1300/10/10",
+                        },
+                        success: function(data) {
+
+
+                            $('#EditLockDate').css({
+                                "color": "white"
+                            });
+                            $('#EditLockDate').val("1396/03/28");
+                            if ($('#EditLockDate').val() == "1396/03/28") {
+                                $('#EditLockDate').val("1396/03/27");
+                            }
+                            $('[aria-controls="EditLockDate_dateview"]').click(function() {
+
+                                $('#EditLockDate').css({
+                                    "color": "black"
+                                });
+                            });
+
+
+                        }
+                    });
+                } else {
+                        $.ajax({
+                            url: '/Project/CommentsEditLockDate',
+                            type: 'POST',
+                            data: {
+                                EditLockDate: EditLockDate,
+                            },
+                            success: function (data) {
+                                $('#EditLockDate').val("");
+                            }
+                        });         
+                }
+            });
+
+
+
+           
+           
+           
+          
+            $("#RemoveLockDate").keydown(function (e) {
+                var RemoveLockDate = $('#RemoveLockDate').val();
+
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                    $.ajax({
+                        url: '/Project/CommentsRemoveLockDate',
+                        type: 'POST',
+                        data: {
+                            RemoveLockDate: "1300/10/10",
+                        },
+                        success: function (data) {
+
+
+                            $('#RemoveLockDate').css({
+                                "color": "white"
+                            });
+                            $('#RemoveLockDate').val("1396/03/28");
+                            if ($('#RemoveLockDate').val() == "1396/03/28") {
+                                $('#RemoveLockDate').val("1396/03/27");
+                            }
+                            $('[aria-controls="RemoveLockDate_dateview"]').click(function () {
+
+                                $('#RemoveLockDate').css({
+                                    "color": "black"
+                                });
+                            });
+
+
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Project/CommentsRemoveLockDate',
+                        type: 'POST',
+                        data: {
+                            RemoveLockDate: RemoveLockDate,
+                        },
+                        success: function (data) {
+                            $('#RemoveLockDate').val("");
+                        }
+                    });
+                }
+            });
+
+            $("#EditFileLockDate").keydown(function (e) {
+                var EditFileLockDate = $('#EditFileLockDate').val();
+
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                    $.ajax({
+                        url: '/Project/CommentsEditFileLockDate',
+                        type: 'POST',
+                        data: {
+                            EditFileLockDate: "1300/10/10",
+                        },
+                        success: function (data) {
+
+
+                            $('#EditFileLockDate').css({
+                                "color": "white"
+                            });
+                            $('#EditFileLockDate').val("1396/03/28");
+                            if ($('#EditFileLockDate').val() == "1396/03/28") {
+                                $('#EditFileLockDate').val("1396/03/27");
+                            }
+                            $('[aria-controls="EditFileLockDate_dateview"]').click(function () {
+
+                                $('#EditFileLockDate').css({
+                                    "color": "black"
+                                });
+                            });
+
+
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Project/CommentsEditFileLockDate',
+                        type: 'POST',
+                        data: {
+                            EditFileLockDate: EditFileLockDate,
+                        },
+                        success: function (data) {
+                            $('#EditFileLockDate').val("");
+                        }
+                    });
+                }
+            });
+
+            $("#RemoveFileLockDate").keydown(function (e) {
+                var RemoveFileLockDate = $('#RemoveFileLockDate').val();
+
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                    $.ajax({
+                        url: '/Project/CommentsRemoveFileLockDate',
+                        type: 'POST',
+                        data: {
+                            RemoveFileLockDate: "1300/10/10",
+                        },
+                        success: function (data) {
+
+
+                            $('#RemoveFileLockDate').css({
+                                "color": "white"
+                            });
+                            $('#RemoveFileLockDate').val("1396/03/28");
+                            if ($('#RemoveFileLockDate').val() == "1396/03/28") {
+                                $('#RemoveFileLockDate').val("1396/03/27");
+                            }
+                            $('[aria-controls="RemoveFileLockDate_dateview"]').click(function () {
+
+                                $('#RemoveFileLockDate').css({
+                                    "color": "black"
+                                });
+                            });
+
+
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Project/CommentsRemoveFileLockDate',
+                        type: 'POST',
+                        data: {
+                            RemoveFileLockDate: RemoveFileLockDate,
+                        },
+                        success: function (data) {
+                            $('#RemoveFileLockDate').val("");
+                        }
+                    });
+                }
+            });
+
+            $("#EditCommentLockDate").keydown(function (e) {
+                var EditCommentLockDate = $('#EditCommentLockDate').val();
+
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                    $.ajax({
+                        url: '/Project/CommentsEditCommentLockDate',
+                        type: 'POST',
+                        data: {
+                            EditCommentLockDate: "1300/10/10",
+                        },
+                        success: function (data) {
+
+
+                            $('#EditCommentLockDate').css({
+                                "color": "white"
+                            });
+                            $('#EditCommentLockDate').val("1396/03/28");
+                            if ($('#EditCommentLockDate').val() == "1396/03/28") {
+                                $('#EditCommentLockDate').val("1396/03/27");
+                            }
+                            $('[aria-controls="EditCommentLockDate_dateview"]').click(function () {
+
+                                $('#EditCommentLockDate').css({
+                                    "color": "black"
+                                });
+                            });
+
+
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Project/CommentsEditCommentLockDate',
+                        type: 'POST',
+                        data: {
+                            EditCommentLockDate: EditCommentLockDate,
+                        },
+                        success: function (data) {
+                            $('#EditCommentLockDate').val("");
+                        }
+                    });
+                }
+            });
+
+            $("#RemoveCommentLockDate").keydown(function (e) {
+                var RemoveCommentLockDate = $('#RemoveCommentLockDate').val();
+
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                    $.ajax({
+                        url: '/Project/CommentsRemoveCommentLockDate',
+                        type: 'POST',
+                        data: {
+                            RemoveCommentLockDate: "1300/10/10",
+                        },
+                        success: function (data) {
+
+
+                            $('#RemoveCommentLockDate').css({
+                                "color": "white"
+                            });
+                            $('#RemoveCommentLockDate').val("1396/03/28");
+                            if ($('#RemoveCommentLockDate').val() == "1396/03/28") {
+                                $('#RemoveCommentLockDate').val("1396/03/27");
+                            }
+                            $('[aria-controls="RemoveCommentLockDate_dateview"]').click(function () {
+
+                                $('#RemoveCommentLockDate').css({
+                                    "color": "black"
+                                });
+                            });
+
+
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Project/CommentsRemoveCommentLockDate',
+                        type: 'POST',
+                        data: {
+                            RemoveCommentLockDate: RemoveCommentLockDate,
+                        },
+                        success: function (data) {
+                            $('#RemoveCommentLockDate').val("");
+                        }
+                    });
+                }
+            });
+        });
+
+</script>
+
+
