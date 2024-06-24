@@ -1,6 +1,7 @@
 Archive and Management System
 
 A comprehensive web application for managing user access, files, and activities within organizations. The system includes robust user management, access control, file handling functionalities, detailed activity logging, and reporting features.
+
 Table of Contents
 
     Introduction
